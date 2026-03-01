@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { AssetDefinition, CharacterAsset } from '$lib/data/types';
 	import { getAssetById } from '$lib/data/assets';
+	import { ASSET_PDF_REFS } from '$lib/data/pdf-index';
+	import PdfRefLink from '../reference/PdfRefLink.svelte';
 
 	let { asset, definition, ontoggle, ontrackchange, onremove }: {
 		asset: CharacterAsset;
@@ -17,7 +19,12 @@
 	<div class="asset-card card">
 		<div class="asset-header">
 			<div>
-				<h4 class="asset-name">{asset.customName || def.name}</h4>
+				<div class="asset-name-row">
+					<h4 class="asset-name">{asset.customName || def.name}</h4>
+					{#if ASSET_PDF_REFS[asset.definitionId]}
+						<PdfRefLink ref={ASSET_PDF_REFS[asset.definitionId]} />
+					{/if}
+				</div>
 				<span class="asset-category">{def.category}</span>
 			</div>
 			{#if onremove}
@@ -64,6 +71,11 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
+	}
+	.asset-name-row {
+		display: flex;
+		align-items: center;
+		gap: var(--space-xs);
 	}
 	.asset-name {
 		font-size: 14px;

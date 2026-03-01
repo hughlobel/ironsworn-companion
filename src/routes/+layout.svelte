@@ -5,6 +5,7 @@
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
 	import { loadFromLocalStorage, saveToLocalStorage } from '$lib/stores/persistence.svelte';
+	import { pdfStore } from '$lib/stores/pdf.svelte';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
@@ -14,6 +15,7 @@
 	onMount(() => {
 		loadFromLocalStorage();
 		loaded = true;
+		pdfStore.init();
 	});
 
 	// Auto-save on changes
@@ -35,6 +37,7 @@
 		{ href: `${base}/tracks`, label: 'Tracks', icon: '◼' },
 		{ href: `${base}/oracles`, label: 'Oracles', icon: '🎲' },
 		{ href: `${base}/journal`, label: 'Journal', icon: '📖' },
+		{ href: `${base}/reference`, label: 'Reference', icon: '📚' },
 	];
 
 	function isActive(href: string, pathname: string) {

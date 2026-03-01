@@ -2,6 +2,8 @@
 	import type { OracleYesNoOdds, OracleTable } from '$lib/data/types';
 	import { rollOracle, rollYesNo, oddsLabel } from '$lib/engine/oracle';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
+	import { ORACLE_PDF_REFS } from '$lib/data/pdf-index';
+	import PdfRefLink from '../reference/PdfRefLink.svelte';
 
 	let { table }: { table?: OracleTable } = $props();
 
@@ -58,7 +60,12 @@
 
 	{#if table}
 		<div class="table-section card">
-			<h4 class="card-title">{table.name}</h4>
+			<div class="table-header">
+				<h4 class="card-title">{table.name}</h4>
+				{#if ORACLE_PDF_REFS[table.id]}
+					<PdfRefLink ref={ORACLE_PDF_REFS[table.id]} />
+				{/if}
+			</div>
 			<button class="btn btn-primary" onclick={doTableRoll}>Roll d{table.d}</button>
 
 			{#if tableResult}
@@ -85,6 +92,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-lg);
+	}
+	.table-header {
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
 	}
 	.odds-picker {
 		display: flex;
