@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
 	import type { Stat, Stats, CharacterAsset } from '$lib/data/types';
@@ -49,7 +50,7 @@
 		characterStore.create(name.trim(), stats, assets);
 		campaignStore.setCampaignName(`${name.trim()}'s Campaign`);
 		campaignStore.addNarrative(`${name.trim()} sets out into the Ironlands, iron vow in hand.`);
-		goto('/');
+		goto(`${base}/`);
 	}
 
 	const assetCategories = $derived(() => {

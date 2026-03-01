@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
@@ -28,17 +29,19 @@
 	});
 
 	const nav = [
-		{ href: '/', label: 'Play', icon: '⚔' },
-		{ href: '/character', label: 'Character', icon: '👤' },
-		{ href: '/moves', label: 'Moves', icon: '📜' },
-		{ href: '/tracks', label: 'Tracks', icon: '◼' },
-		{ href: '/oracles', label: 'Oracles', icon: '🎲' },
-		{ href: '/journal', label: 'Journal', icon: '📖' },
+		{ href: `${base}/`, label: 'Play', icon: '⚔' },
+		{ href: `${base}/character`, label: 'Character', icon: '👤' },
+		{ href: `${base}/moves`, label: 'Moves', icon: '📜' },
+		{ href: `${base}/tracks`, label: 'Tracks', icon: '◼' },
+		{ href: `${base}/oracles`, label: 'Oracles', icon: '🎲' },
+		{ href: `${base}/journal`, label: 'Journal', icon: '📖' },
 	];
 
 	function isActive(href: string, pathname: string) {
-		if (href === '/') return pathname === '/';
-		return pathname.startsWith(href);
+		const path = href.replace(base, '') || '/';
+		const current = pathname.replace(base, '') || '/';
+		if (path === '/') return current === '/';
+		return current.startsWith(path);
 	}
 </script>
 
@@ -99,7 +102,7 @@
 			</div>
 		{:else}
 			<div class="quick-stats">
-				<a href="/character/create" class="btn btn-primary w-full" style="text-decoration: none; text-align: center;">
+				<a href="{base}/character/create" class="btn btn-primary w-full" style="text-decoration: none; text-align: center;">
 					Create Character
 				</a>
 			</div>

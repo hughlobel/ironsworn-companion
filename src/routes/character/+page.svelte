@@ -7,6 +7,7 @@
 	import AssetCard from '$lib/components/character/AssetCard.svelte';
 	import { getBoxes } from '$lib/engine/progress';
 	import type { Stat, DebilityKey } from '$lib/data/types';
+	import { base } from '$app/paths';
 	import { downloadCampaignFile, uploadCampaignFile, clearLocalStorage } from '$lib/stores/persistence.svelte';
 	import { goto } from '$app/navigation';
 
@@ -16,7 +17,7 @@
 		campaignStore.reset();
 		clearLocalStorage();
 		confirmingReset = false;
-		goto('/character/create');
+		goto(`${base}/character/create`);
 	}
 
 	const debilityGroups = [
@@ -46,7 +47,7 @@
 	<div class="empty-state card" style="max-width: 400px; margin: 80px auto; text-align: center; padding: var(--space-2xl);">
 		<h2>No Character</h2>
 		<p class="text-secondary">Create a character to begin.</p>
-		<a href="/character/create" class="btn btn-primary" style="text-decoration: none;">Create Character</a>
+		<a href="{base}/character/create" class="btn btn-primary" style="text-decoration: none;">Create Character</a>
 	</div>
 {:else}
 	<div class="character-sheet">

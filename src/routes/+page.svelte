@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
 	import { MOVES, MOVE_CATEGORIES, getMovesByCategory } from '$lib/data/moves';
@@ -16,7 +17,7 @@
 		<div class="empty-state card">
 			<h2>Welcome to Ironsworn</h2>
 			<p class="text-secondary">Create a character to begin your journey into the Ironlands.</p>
-			<a href="/character/create" class="btn btn-primary" style="text-decoration: none;">Create Character</a>
+			<a href="{base}/character/create" class="btn btn-primary" style="text-decoration: none;">Create Character</a>
 		</div>
 	{:else}
 		<div class="dashboard-grid">
