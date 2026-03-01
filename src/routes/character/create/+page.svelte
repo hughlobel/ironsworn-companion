@@ -6,25 +6,59 @@
 	import type { Stat, Stats, CharacterAsset } from '$lib/data/types';
 	import { defaultStats } from '$lib/data/types';
 	import { ASSETS, assetCategoryLabel } from '$lib/data/assets';
-	import StatBlock from '$lib/components/character/StatBlock.svelte';
 
 	let name = $state('');
-	let stats = $state<Stats>({ edge: 1, heart: 1, iron: 1, shadow: 1, wits: 1 });
+	let statAssignments = $state<Record<Stat, number | null>>({
+		edge: null, heart: null, iron: null, shadow: null, wits: null
+	});
 	let selectedAssets = $state<string[]>([]);
 	let step = $state(1);
 
-	// Ironsworn: distribute array [3, 2, 2, 1, 1] across 5 stats
-	const STAT_ARRAY = [3, 2, 2, 1, 1];
-	const statPoints = $derived(Object.values(stats).reduce((a, b) => a + b, 0));
-	const targetPoints = STAT_ARRAY.reduce((a, b) => a + b, 0); // 9
+	const STAT_VALUES = [3, 2, 2, 1, 1];
+	const STAT_KEYS: Stat[] = ['edge', 'heart', 'iron', 'shadow', 'wits'];
 
-	function setStat(stat: Stat, value: number) {
-		const clamped = Math.max(1, Math.min(4, value));
-		stats = { ...stats, [stat]: clamped };
+	const assignedCount = $derived(
+		STAT_KEYS.filter(k => statAssignments[k] !== null).length
+	);
+	const allAssigned = $derived(assignedCount === 5);
+
+	// Which values from the pool are still available
+	const usedValues = $derived(
+		STAT_KEYS.map(k => statAssignments[k]).filter(v => v !== null) as number[]
+	);
+	const availableValues = $derived(() => {
+		const pool = [...STAT_VALUES];
+		for (const v of usedValues) {
+			const idx = pool.indexOf(v);
+			if (idx >= 0) pool.splice(idx, 1);
+		}
+		return pool;
+	});
+	const nextValue = $derived(availableValues().length > 0 ? availableValues()[0] : null);
+
+	function assignStat(stat: Stat) {
+		if (statAssignments[stat] !== null) {
+			// Unassign
+			statAssignments = { ...statAssignments, [stat]: null };
+		} else if (nextValue !== null) {
+			statAssignments = { ...statAssignments, [stat]: nextValue };
+		}
 	}
 
+	function resetStats() {
+		statAssignments = { edge: null, heart: null, iron: null, shadow: null, wits: null };
+	}
+
+	const stats = $derived<Stats>({
+		edge: statAssignments.edge ?? 0,
+		heart: statAssignments.heart ?? 0,
+		iron: statAssignments.iron ?? 0,
+		shadow: statAssignments.shadow ?? 0,
+		wits: statAssignments.wits ?? 0
+	});
+
 	function isValid() {
-		return name.trim() && statPoints === targetPoints && selectedAssets.length >= 1;
+		return name.trim() && allAssigned && selectedAssets.length >= 1;
 	}
 
 	function toggleAsset(id: string) {
@@ -82,13 +116,35 @@
 		<section class="step card">
 			<h3 class="card-title">Step 2: Stats</h3>
 			<p class="text-secondary text-sm mb-md">
-				Distribute your stats. Arrange the values 3, 2, 2, 1, 1 among your five stats.
-				Current total: {statPoints}/{targetPoints}
+				Assign the values <strong>3, 2, 2, 1, 1</strong> to your five stats. Click a stat to assign the next value. Click an assigned stat to unassign it.
 			</p>
-			<StatBlock {stats} editable onchange={setStat} />
+
+			{#if nextValue !== null}
+				<div class="next-value-hint">
+					Assigning: <span class="next-val">{nextValue}</span>
+					<span class="text-muted">({availableValues().join(', ')} remaining)</span>
+				</div>
+			{/if}
+
+			<div class="stat-assign-grid">
+				{#each STAT_KEYS as stat}
+					<button
+						class="stat-assign-btn"
+						class:assigned={statAssignments[stat] !== null}
+						onclick={() => assignStat(stat)}
+					>
+						<span class="stat-assign-label">{stat}</span>
+						<span class="stat-assign-value">
+							{statAssignments[stat] !== null ? statAssignments[stat] : '—'}
+						</span>
+					</button>
+				{/each}
+			</div>
+
 			<div class="flex gap-sm mt-lg">
 				<button class="btn" onclick={() => step = 1}>Back</button>
-				<button class="btn btn-primary" disabled={statPoints !== targetPoints} onclick={() => step = 3}>
+				<button class="btn" onclick={resetStats} disabled={assignedCount === 0}>Reset</button>
+				<button class="btn btn-primary" disabled={!allAssigned} onclick={() => step = 3}>
 					Next
 				</button>
 			</div>
@@ -140,6 +196,62 @@
 	.step {
 		display: flex;
 		flex-direction: column;
+	}
+	.next-value-hint {
+		font-size: 13px;
+		color: var(--text-secondary);
+		margin-bottom: var(--space-md);
+	}
+	.next-val {
+		font-family: var(--font-mono);
+		font-weight: 700;
+		font-size: 18px;
+		color: var(--accent);
+	}
+	.stat-assign-grid {
+		display: flex;
+		gap: var(--space-sm);
+	}
+	.stat-assign-btn {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-xs);
+		padding: var(--space-md);
+		background: var(--bg-raised);
+		border: 2px solid var(--border);
+		border-radius: var(--radius-md);
+		cursor: pointer;
+		transition: border-color 0.15s, background 0.15s;
+		font-family: var(--font-body);
+		color: var(--text-primary);
+	}
+	.stat-assign-btn:hover {
+		border-color: var(--text-muted);
+	}
+	.stat-assign-btn.assigned {
+		border-color: var(--accent);
+		background: var(--accent-glow);
+	}
+	.stat-assign-label {
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		color: var(--text-muted);
+	}
+	.stat-assign-btn.assigned .stat-assign-label {
+		color: var(--accent);
+	}
+	.stat-assign-value {
+		font-size: 28px;
+		font-weight: 700;
+		font-family: var(--font-mono);
+		color: var(--text-muted);
+	}
+	.stat-assign-btn.assigned .stat-assign-value {
+		color: var(--accent);
 	}
 	.asset-category {
 		margin-bottom: var(--space-lg);

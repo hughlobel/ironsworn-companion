@@ -5,13 +5,46 @@
 	import MeterTrack from '$lib/components/character/MeterTrack.svelte';
 	import ConditionToggle from '$lib/components/character/ConditionToggle.svelte';
 	import AssetCard from '$lib/components/character/AssetCard.svelte';
-	import { getBoxes } from '$lib/engine/progress';
-	import type { Stat, DebilityKey } from '$lib/data/types';
+	import Modal from '$lib/components/shared/Modal.svelte';
+	import { getBoxes, getProgressScore } from '$lib/engine/progress';
+	import { progressRoll, outcomeLabel } from '$lib/engine/dice';
+	import RollResult from '$lib/components/dice/RollResult.svelte';
+	import type { Stat, DebilityKey, CharacterAsset, ProgressRoll } from '$lib/data/types';
+
+	let bondsRoll = $state<ProgressRoll | null>(null);
+
+	function rollBonds() {
+		const roll = progressRoll(characterStore.bonds);
+		roll.trackName = 'Bonds';
+		bondsRoll = roll;
+		const matchText = roll.isMatch ? ' (MATCH!)' : '';
+		campaignStore.logRoll(
+			`Write Your Epilogue: ${outcomeLabel(roll.outcome)}${matchText} (${getProgressScore(characterStore.bonds)} vs ${roll.challengeDie1}, ${roll.challengeDie2})`,
+			roll
+		);
+	}
+	import { ASSETS, getAssetsByCategory, assetCategoryLabel } from '$lib/data/assets';
 	import { base } from '$app/paths';
 	import { downloadCampaignFile, uploadCampaignFile, clearLocalStorage } from '$lib/stores/persistence.svelte';
 	import { goto } from '$app/navigation';
 
 	let confirmingReset = $state(false);
+	let showAssetBrowser = $state(false);
+
+	const ownedAssetIds = $derived(new Set(characterStore.assets.map(a => a.definitionId)));
+
+	function addAssetById(id: string) {
+		const def = ASSETS.find(a => a.id === id);
+		if (!def || ownedAssetIds.has(id)) return;
+		const asset: CharacterAsset = {
+			definitionId: id,
+			abilities: def.abilities.map((_, i) => i === 0),
+			trackValue: def.track?.max
+		};
+		characterStore.addAsset(asset);
+		campaignStore.addJournalEntry('narrative', `Acquired asset: ${def.name}`);
+		showAssetBrowser = false;
+	}
 
 	function newCampaign() {
 		campaignStore.reset();
@@ -97,7 +130,7 @@
 		</section>
 
 		<section class="section">
-			<h3 class="section-title">Bonds ({bondBoxes.full}/10)</h3>
+			<h3 class="section-title">Bonds ({bondBoxes.full}/10, score {getProgressScore(characterStore.bonds)})</h3>
 			<div class="progress-track">
 				{#each Array(10) as _, i}
 					{@const boxTicks = Math.max(0, Math.min(4, characterStore.bonds - i * 4))}
@@ -109,14 +142,23 @@
 				{/each}
 			</div>
 			<div class="flex gap-sm mt-md">
-				<button class="btn btn-sm" onclick={() => characterStore.adjustBonds(-1)}>-1 Tick</button>
-				<button class="btn btn-sm" onclick={() => characterStore.adjustBonds(1)}>+1 Tick</button>
+				<button class="btn btn-sm" onclick={() => { characterStore.adjustBonds(-1); campaignStore.logTrackUpdate(`Bonds: removed 1 tick (${characterStore.bonds})`, 'bonds'); }}>-1 Tick</button>
+				<button class="btn btn-sm" onclick={() => { characterStore.adjustBonds(1); campaignStore.logTrackUpdate(`Forge a Bond: +1 tick (${characterStore.bonds})`, 'bonds'); }}>Forge a Bond (+1 Tick)</button>
+				<button class="btn btn-sm" onclick={rollBonds}>Write Your Epilogue</button>
 			</div>
+			{#if bondsRoll}
+				<div class="mt-md">
+					<RollResult roll={bondsRoll} />
+				</div>
+			{/if}
 		</section>
 
-		{#if characterStore.assets.length > 0}
-			<section class="section">
-				<h3 class="section-title">Assets</h3>
+		<section class="section">
+			<div class="flex justify-between items-center mb-md">
+				<h3 class="section-title" style="margin-bottom: 0;">Assets ({characterStore.assets.length})</h3>
+				<button class="btn btn-sm" onclick={() => showAssetBrowser = true}>+ Add Asset</button>
+			</div>
+			{#if characterStore.assets.length > 0}
 				<div class="assets-grid">
 					{#each characterStore.assets as asset, i}
 						<AssetCard
@@ -127,8 +169,35 @@
 						/>
 					{/each}
 				</div>
-			</section>
-		{/if}
+			{:else}
+				<p class="text-muted text-sm">No assets yet. Use the Advance move to gain assets.</p>
+			{/if}
+		</section>
+
+		<Modal open={showAssetBrowser} title="Add Asset" onclose={() => showAssetBrowser = false}>
+			<div class="asset-browser">
+				{#each [...getAssetsByCategory().entries()] as [category, assets]}
+					<div class="browser-category">
+						<h4 class="browser-cat-title">{assetCategoryLabel(category)}</h4>
+						{#each assets as asset}
+							<button
+								class="browser-asset-btn"
+								disabled={ownedAssetIds.has(asset.id)}
+								onclick={() => addAssetById(asset.id)}
+							>
+								<div class="browser-asset-header">
+									<span class="browser-asset-name">{asset.name}</span>
+									{#if ownedAssetIds.has(asset.id)}
+										<span class="owned-badge">Owned</span>
+									{/if}
+								</div>
+								<p class="browser-asset-desc">{asset.abilities[0].text}</p>
+							</button>
+						{/each}
+					</div>
+				{/each}
+			</div>
+		</Modal>
 
 		<section class="section">
 			<h3 class="section-title">Campaign</h3>
@@ -188,5 +257,58 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 		gap: var(--space-md);
+	}
+	.asset-browser {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-lg);
+	}
+	.browser-cat-title {
+		font-size: 12px;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: var(--text-muted);
+		margin-bottom: var(--space-sm);
+	}
+	.browser-asset-btn {
+		width: 100%;
+		padding: var(--space-sm) var(--space-md);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		background: var(--bg-raised);
+		cursor: pointer;
+		text-align: left;
+		font-family: var(--font-body);
+		color: var(--text-primary);
+		margin-bottom: var(--space-xs);
+		transition: border-color 0.15s;
+	}
+	.browser-asset-btn:hover:not(:disabled) {
+		border-color: var(--accent);
+	}
+	.browser-asset-btn:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+	.browser-asset-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.browser-asset-name {
+		font-weight: 700;
+		font-size: 13px;
+	}
+	.owned-badge {
+		font-size: 10px;
+		font-weight: 700;
+		color: var(--strong-hit);
+		text-transform: uppercase;
+	}
+	.browser-asset-desc {
+		font-size: 11px;
+		color: var(--text-muted);
+		margin-top: 2px;
+		line-height: 1.4;
 	}
 </style>

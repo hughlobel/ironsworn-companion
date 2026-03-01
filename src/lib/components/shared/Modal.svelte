@@ -1,11 +1,12 @@
 <script lang="ts">
-	let { open = false, title = '', onclose }: {
+	import type { Snippet } from 'svelte';
+
+	let { open = false, title = '', onclose, children }: {
 		open?: boolean;
 		title?: string;
 		onclose?: () => void;
+		children: Snippet;
 	} = $props();
-
-	let { children } = $props();
 
 	function handleBackdrop(e: MouseEvent) {
 		if (e.target === e.currentTarget) onclose?.();

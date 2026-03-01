@@ -9,7 +9,15 @@
 
 	let activeTab = $state<'moves' | 'oracle'>('moves');
 	let moveFilter = $state('adventure');
+	let moveSearch = $state('');
 	const filteredMoves = $derived(getMovesByCategory(moveFilter as any));
+	const searchResults = $derived(() => {
+		if (!moveSearch.trim()) return [];
+		const q = moveSearch.trim().toLowerCase();
+		return MOVES.filter(m =>
+			m.name.toLowerCase().includes(q) || m.trigger.toLowerCase().includes(q)
+		);
+	});
 </script>
 
 <div class="play-dashboard">
@@ -28,23 +36,40 @@
 				</div>
 
 				{#if activeTab === 'moves'}
-					<div class="move-filters">
-						{#each MOVE_CATEGORIES as cat}
-							<button
-								class="filter-btn"
-								class:active={moveFilter === cat.category}
-								onclick={() => moveFilter = cat.category}
-							>
-								{cat.name}
-							</button>
-						{/each}
-					</div>
+					<input
+						type="text"
+						bind:value={moveSearch}
+						placeholder="Search moves..."
+						class="move-search"
+					/>
 
-					<div class="move-list">
-						{#each filteredMoves as move (move.id)}
-							<MoveCard {move} compact />
-						{/each}
-					</div>
+					{#if moveSearch.trim()}
+						<div class="move-list">
+							{#each searchResults() as move (move.id)}
+								<MoveCard {move} compact />
+							{:else}
+								<p class="text-muted text-sm">No moves match "{moveSearch}"</p>
+							{/each}
+						</div>
+					{:else}
+						<div class="move-filters">
+							{#each MOVE_CATEGORIES as cat}
+								<button
+									class="filter-btn"
+									class:active={moveFilter === cat.category}
+									onclick={() => moveFilter = cat.category}
+								>
+									{cat.name}
+								</button>
+							{/each}
+						</div>
+
+						<div class="move-list">
+							{#each filteredMoves as move (move.id)}
+								<MoveCard {move} compact />
+							{/each}
+						</div>
+					{/if}
 				{:else}
 					<OraclePanel />
 				{/if}
@@ -111,6 +136,9 @@
 	.tab.active {
 		color: var(--accent);
 		border-bottom-color: var(--accent);
+	}
+	.move-search {
+		font-size: 13px;
 	}
 	.move-filters {
 		display: flex;
