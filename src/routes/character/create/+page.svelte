@@ -161,14 +161,30 @@
 					<h4 class="category-title">{assetCategoryLabel(category)}</h4>
 					<div class="asset-picker">
 						{#each assets as asset}
+							{@const isSelected = selectedAssets.includes(asset.id)}
 							<button
 								class="asset-pick"
-								class:selected={selectedAssets.includes(asset.id)}
+								class:selected={isSelected}
 								onclick={() => toggleAsset(asset.id)}
-								disabled={!selectedAssets.includes(asset.id) && selectedAssets.length >= 3}
+								disabled={!isSelected && selectedAssets.length >= 3}
 							>
 								<span class="asset-pick-name">{asset.name}</span>
-								<span class="asset-pick-desc">{asset.abilities[0].text.slice(0, 80)}...</span>
+								{#if isSelected}
+									{#if asset.description}
+										<span class="asset-pick-flavor">{asset.description}</span>
+									{/if}
+									{#each asset.abilities as ability, i}
+										<span class="asset-pick-ability">
+											<span class="ability-marker">{i === 0 ? '◆' : '◇'}</span>
+											{ability.text}
+										</span>
+									{/each}
+									{#if asset.track}
+										<span class="asset-pick-track">{asset.track.label}: {asset.track.max}</span>
+									{/if}
+								{:else}
+									<span class="asset-pick-desc">{asset.abilities[0].text.slice(0, 80)}...</span>
+								{/if}
 							</button>
 						{/each}
 					</div>
@@ -285,6 +301,7 @@
 	.asset-pick.selected {
 		border-color: var(--accent);
 		background: var(--accent-glow);
+		grid-column: 1 / -1;
 	}
 	.asset-pick:disabled {
 		opacity: 0.4;
@@ -301,5 +318,35 @@
 		display: block;
 		margin-top: 2px;
 		line-height: 1.4;
+	}
+	.asset-pick-flavor {
+		display: block;
+		font-size: 11px;
+		font-style: italic;
+		color: var(--text-secondary);
+		margin-top: 4px;
+		line-height: 1.4;
+	}
+	.asset-pick-ability {
+		display: block;
+		font-size: 11px;
+		color: var(--text-primary);
+		margin-top: 6px;
+		line-height: 1.5;
+		text-align: left;
+	}
+	.ability-marker {
+		color: var(--accent);
+		margin-right: 4px;
+	}
+	.asset-pick-track {
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 600;
+		color: var(--text-muted);
+		margin-top: 8px;
+		padding: 2px 8px;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
 	}
 </style>
