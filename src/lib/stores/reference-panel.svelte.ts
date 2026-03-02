@@ -1,6 +1,7 @@
 import { RULEBOOK_SECTIONS } from '$lib/data/rulebook-index';
 
 const STORAGE_KEY = 'reference-panel-width';
+const SECTION_KEY = 'reference-panel-section';
 const DEFAULT_WIDTH = 500;
 const MIN_WIDTH = 300;
 const MAX_WIDTH = 1200;
@@ -26,6 +27,12 @@ function createReferencePanelStore() {
 		return RULEBOOK_SECTIONS.findIndex(s => s.slug === currentSection);
 	}
 
+	function saveSection(slug: string) {
+		if (typeof localStorage !== 'undefined') {
+			localStorage.setItem(SECTION_KEY, slug);
+		}
+	}
+
 	return {
 		get isOpen() { return isOpen; },
 		get isFullscreen() { return isFullscreen; },
@@ -44,7 +51,27 @@ function createReferencePanelStore() {
 
 		openSection(slug: string) {
 			currentSection = slug;
+			saveSection(slug);
 			isOpen = true;
+		},
+
+		/** Open the last-viewed section, or the first section if none saved. */
+		openLastOrFirst() {
+			if (typeof localStorage !== 'undefined') {
+				const saved = localStorage.getItem(SECTION_KEY);
+				if (saved && RULEBOOK_SECTIONS.some(s => s.slug === saved)) {
+					currentSection = saved;
+					isOpen = true;
+					return;
+				}
+			}
+			// Default to first section
+			if (RULEBOOK_SECTIONS.length > 0) {
+				const slug = RULEBOOK_SECTIONS[0].slug;
+				currentSection = slug;
+				saveSection(slug);
+				isOpen = true;
+			}
 		},
 
 		close() {
@@ -60,6 +87,7 @@ function createReferencePanelStore() {
 			const idx = currentIndex();
 			if (idx > 0) {
 				currentSection = RULEBOOK_SECTIONS[idx - 1].slug;
+				saveSection(currentSection!);
 			}
 		},
 
@@ -67,6 +95,7 @@ function createReferencePanelStore() {
 			const idx = currentIndex();
 			if (idx >= 0 && idx < RULEBOOK_SECTIONS.length - 1) {
 				currentSection = RULEBOOK_SECTIONS[idx + 1].slug;
+				saveSection(currentSection!);
 			}
 		},
 

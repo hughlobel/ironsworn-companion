@@ -45,7 +45,7 @@
 		{ href: `${base}/world`, label: 'World', icon: '🌍' },
 		{ href: `${base}/delves`, label: 'Delves', icon: '🕳' },
 		{ href: `${base}/journal`, label: 'Journal', icon: '📖' },
-		{ href: `${base}/reference`, label: 'Reference', icon: '📚' },
+		{ href: `${base}/reference`, label: 'Rulebook', icon: '📚' },
 	];
 
 	function isActive(href: string, pathname: string) {

@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { RULEBOOK_SECTIONS, type RulebookSection } from '$lib/data/rulebook-index';
 	import { referencePanelStore } from '$lib/stores/reference-panel.svelte';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		referencePanelStore.openLastOrFirst();
+	});
 
 	let search = $state('');
 
