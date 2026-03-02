@@ -5,12 +5,23 @@
 	import { base } from '$app/paths';
 	import { onMount, onDestroy } from 'svelte';
 
-	let { pdfKey, page = 1 }: { pdfKey: PdfKey; page?: number } = $props();
+	let {
+		pdfKey,
+		page = 1,
+		twoPage = false,
+		externalControls = false,
+	}: {
+		pdfKey: PdfKey;
+		page?: number;
+		twoPage?: boolean;
+		externalControls?: boolean;
+	} = $props();
 
 	const isLoaded = $derived(pdfStore.loadedPdfs[pdfKey]);
 	const meta = $derived(PDF_CATALOG.find(p => p.key === pdfKey));
 
 	let canvasEl: HTMLCanvasElement;
+	let canvasEl2: HTMLCanvasElement;
 	let containerEl: HTMLDivElement;
 	let pdfjsLib: any = null;
 	let pdfDoc: any = null;
@@ -24,16 +35,48 @@
 	let initialPinchDistance = 0;
 	let initialPinchScale = 1;
 
+	// Expose for parent components
+	export function getPage() { return currentPage; }
+	export function getTotalPages() { return totalPages; }
+	export function getScale() { return scale; }
+
+	export function goToPage(p: number) {
+		if (!pdfDoc) return;
+		currentPage = Math.min(Math.max(1, p), totalPages);
+		renderPage();
+	}
+
+	export function prevPage() {
+		if (currentPage > 1) {
+			currentPage--;
+			renderPage();
+		}
+	}
+
+	export function nextPage() {
+		if (currentPage < totalPages) {
+			currentPage++;
+			renderPage();
+		}
+	}
+
+	export function zoomIn() {
+		scale = Math.min(4, scale + 0.25);
+		renderPage();
+	}
+
+	export function zoomOut() {
+		scale = Math.max(0.5, scale - 0.25);
+		renderPage();
+	}
+
 	async function loadPdf() {
 		if (!isLoaded) return;
 		error = '';
 		rendering = true;
 
 		try {
-			// Dynamic import to avoid SSR issues — pdfjs-dist requires browser APIs
 			pdfjsLib = await import('pdfjs-dist');
-			// Import the worker source and set it for pdf.js.
-			// The ?url suffix tells Vite to return the asset URL after bundling.
 			const workerUrl = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
 			pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl.default;
 
@@ -54,55 +97,42 @@
 		}
 	}
 
+	async function renderSingleCanvas(canvas: HTMLCanvasElement, pageNum: number) {
+		if (!pdfDoc || !canvas || pageNum < 1 || pageNum > totalPages) return;
+
+		const pdfPage = await pdfDoc.getPage(pageNum);
+		const viewport = pdfPage.getViewport({ scale });
+		const ctx = canvas.getContext('2d')!;
+
+		const dpr = window.devicePixelRatio || 1;
+		canvas.width = viewport.width * dpr;
+		canvas.height = viewport.height * dpr;
+		canvas.style.width = `${viewport.width}px`;
+		canvas.style.height = `${viewport.height}px`;
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+		await pdfPage.render({ canvasContext: ctx, viewport }).promise;
+	}
+
 	async function renderPage() {
 		if (!pdfDoc || !canvasEl) return;
 		rendering = true;
 
 		try {
-			const pdfPage = await pdfDoc.getPage(currentPage);
-			const viewport = pdfPage.getViewport({ scale });
-			const ctx = canvasEl.getContext('2d')!;
+			await renderSingleCanvas(canvasEl, currentPage);
 
-			// Handle high-DPI displays
-			const dpr = window.devicePixelRatio || 1;
-			canvasEl.width = viewport.width * dpr;
-			canvasEl.height = viewport.height * dpr;
-			canvasEl.style.width = `${viewport.width}px`;
-			canvasEl.style.height = `${viewport.height}px`;
-			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-			await pdfPage.render({ canvasContext: ctx, viewport }).promise;
+			if (twoPage && canvasEl2 && currentPage + 1 <= totalPages) {
+				await renderSingleCanvas(canvasEl2, currentPage + 1);
+			}
 		} catch (e: any) {
 			error = e?.message || 'Failed to render page.';
 		}
 		rendering = false;
 	}
 
-	function prevPage() {
-		if (currentPage > 1) {
-			currentPage--;
-			renderPage();
-		}
-	}
-
-	function nextPage() {
-		if (currentPage < totalPages) {
-			currentPage++;
-			renderPage();
-		}
-	}
-
-	function zoomIn() {
-		scale = Math.min(4, scale + 0.25);
-		renderPage();
-	}
-
-	function zoomOut() {
-		scale = Math.max(0.5, scale - 0.25);
-		renderPage();
-	}
-
 	function handleKeydown(e: KeyboardEvent) {
+		const target = e.target as HTMLElement;
+		if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { prevPage(); e.preventDefault(); }
 		else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { nextPage(); e.preventDefault(); }
 		else if (e.key === '+' || e.key === '=') { zoomIn(); e.preventDefault(); }
@@ -138,33 +168,59 @@
 
 	onMount(() => {
 		loadPdf();
-		document.addEventListener('keydown', handleKeydown);
+		if (!externalControls) {
+			document.addEventListener('keydown', handleKeydown);
+		}
 	});
 
 	onDestroy(() => {
-		document.removeEventListener('keydown', handleKeydown);
+		if (!externalControls) {
+			document.removeEventListener('keydown', handleKeydown);
+		}
 		pdfDoc?.destroy();
+	});
+
+	// Re-render when twoPage changes
+	$effect(() => {
+		twoPage;
+		if (pdfDoc) renderPage();
 	});
 </script>
 
 <div class="pdf-viewer">
 	{#if isLoaded}
-		<div class="viewer-toolbar">
-			<a href="{base}/reference" class="btn btn-sm">Back</a>
-			<div class="page-nav">
-				<button class="btn btn-sm" onclick={prevPage} disabled={currentPage <= 1}>&#9664;</button>
-				<span class="page-info">{currentPage} / {totalPages || '...'}</span>
-				<button class="btn btn-sm" onclick={nextPage} disabled={currentPage >= totalPages}>&#9654;</button>
+		{#if !externalControls}
+			<div class="viewer-toolbar">
+				<a href="{base}/reference" class="btn btn-sm">Back</a>
+				<div class="page-nav">
+					<button class="btn btn-sm" onclick={prevPage} disabled={currentPage <= 1}>&#9664;</button>
+					<input
+						class="page-input"
+						type="number"
+						min="1"
+						max={totalPages || 1}
+						value={currentPage}
+						onchange={(e) => {
+							const val = parseInt(e.currentTarget.value, 10);
+							if (val >= 1 && val <= totalPages) goToPage(val);
+							else e.currentTarget.value = String(currentPage);
+						}}
+						onkeydown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+					/>
+					<span class="page-total">/ {totalPages || '...'}</span>
+					<button class="btn btn-sm" onclick={nextPage} disabled={currentPage >= totalPages}>&#9654;</button>
+				</div>
+				<div class="zoom-controls">
+					<button class="btn btn-sm" onclick={zoomOut}>-</button>
+					<span class="zoom-info">{Math.round(scale * 100)}%</span>
+					<button class="btn btn-sm" onclick={zoomIn}>+</button>
+				</div>
+				<span class="viewer-title">{meta?.label ?? pdfKey}</span>
 			</div>
-			<div class="zoom-controls">
-				<button class="btn btn-sm" onclick={zoomOut}>-</button>
-				<span class="zoom-info">{Math.round(scale * 100)}%</span>
-				<button class="btn btn-sm" onclick={zoomIn}>+</button>
-			</div>
-			<span class="viewer-title">{meta?.label ?? pdfKey}</span>
-		</div>
+		{/if}
 		<div
 			class="canvas-container"
+			class:two-page={twoPage}
 			bind:this={containerEl}
 			ontouchstart={handleTouchStart}
 			ontouchmove={handleTouchMove}
@@ -176,6 +232,9 @@
 				<div class="loading-msg">Loading...</div>
 			{/if}
 			<canvas bind:this={canvasEl}></canvas>
+			{#if twoPage}
+				<canvas bind:this={canvasEl2} class:hidden={currentPage + 1 > totalPages}></canvas>
+			{/if}
 		</div>
 	{:else}
 		<div class="not-loaded">
@@ -206,7 +265,33 @@
 		align-items: center;
 		gap: var(--space-xs);
 	}
-	.page-info, .zoom-info {
+	.page-input {
+		width: 44px;
+		font-size: 13px;
+		font-family: var(--font-mono);
+		color: var(--text-primary);
+		background: var(--bg-raised);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		text-align: center;
+		padding: 2px 4px;
+		-moz-appearance: textfield;
+	}
+	.page-input::-webkit-inner-spin-button,
+	.page-input::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	.page-input:focus {
+		border-color: var(--accent);
+		outline: none;
+	}
+	.page-total {
+		font-size: 13px;
+		font-family: var(--font-mono);
+		color: var(--text-secondary);
+	}
+	.zoom-info {
 		font-size: 13px;
 		font-family: var(--font-mono);
 		color: var(--text-secondary);
@@ -232,10 +317,17 @@
 		background: var(--bg-raised);
 		-webkit-overflow-scrolling: touch;
 	}
+	.canvas-container.two-page {
+		gap: var(--space-md);
+		align-items: flex-start;
+	}
 	canvas {
 		display: block;
 		max-width: 100%;
 		height: auto;
+	}
+	canvas.hidden {
+		display: none;
 	}
 	.not-loaded, .loading-msg, .error-msg {
 		display: flex;

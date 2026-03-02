@@ -80,6 +80,12 @@ html, body {
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
+	transition: width 0.2s, min-width 0.2s;
+}
+
+.sidebar.collapsed {
+	width: 52px;
+	min-width: 52px;
 }
 
 .sidebar-header {
@@ -88,6 +94,7 @@ html, body {
 	display: flex;
 	align-items: center;
 	gap: var(--space-sm);
+	position: relative;
 }
 
 .sidebar-header h1 {
@@ -95,6 +102,58 @@ html, body {
 	font-weight: 700;
 	color: var(--accent);
 	letter-spacing: 0.5px;
+}
+
+.sidebar-toggle {
+	margin-left: auto;
+	background: none;
+	border: none;
+	color: var(--text-muted);
+	cursor: pointer;
+	font-size: 10px;
+	padding: 4px;
+	border-radius: var(--radius-sm);
+	transition: color 0.15s, background 0.15s;
+	flex-shrink: 0;
+}
+
+.sidebar-toggle:hover {
+	color: var(--text-primary);
+	background: var(--bg-raised);
+}
+
+.sidebar.collapsed .sidebar-header {
+	justify-content: center;
+	padding: var(--space-sm);
+	gap: 0;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+	margin-left: 0;
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	font-size: 8px;
+	padding: 2px;
+	opacity: 0;
+}
+
+.sidebar.collapsed:hover .sidebar-toggle {
+	opacity: 1;
+}
+
+.sidebar.collapsed .sidebar-nav a {
+	justify-content: center;
+	padding: var(--space-sm);
+}
+
+.sidebar.collapsed .sidebar-nav a span {
+	font-size: 18px;
+}
+
+.sidebar.collapsed .quick-stats {
+	padding: var(--space-sm);
+	align-items: center;
 }
 
 .sidebar-nav {
@@ -204,6 +263,31 @@ html, body {
 .meter-btn:active {
 	transform: scale(0.95);
 }
+
+.meter-compact {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+}
+
+.meter-pip {
+	font-size: 11px;
+	font-weight: 700;
+	font-family: var(--font-mono);
+	width: 24px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--radius-sm);
+	background: var(--bg-raised);
+}
+
+.meter-pip.health { color: var(--health); }
+.meter-pip.spirit { color: var(--spirit); }
+.meter-pip.supply { color: var(--supply); }
+.meter-pip.momentum { color: var(--momentum); }
 
 /* ── Main Content ── */
 .main-content {
@@ -454,6 +538,12 @@ label {
 
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--text-muted);
+}
+
+/* ── PDF Panel ── */
+.app-shell.pdf-fullscreen > .sidebar,
+.app-shell.pdf-fullscreen > .main-content {
+	display: none;
 }
 
 /* ── Responsive ── */
