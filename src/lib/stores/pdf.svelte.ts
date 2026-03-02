@@ -100,6 +100,12 @@ function createPdfStore() {
 			const url = blobUrls[key];
 			if (!url) return null;
 			return `${url}#page=${page}`;
+		},
+
+		async getPdfData(key: PdfKey): Promise<ArrayBuffer | null> {
+			if (!db) return null;
+			const buf = await dbGet(db, key);
+			return buf ?? null;
 		}
 	};
 }
