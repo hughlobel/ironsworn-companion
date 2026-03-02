@@ -4,8 +4,8 @@
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
 	import RollResult from '../dice/RollResult.svelte';
-	import { MOVE_PDF_REFS } from '$lib/data/pdf-index';
-	import PdfRefLink from '../reference/PdfRefLink.svelte';
+	import { MOVE_RULEBOOK_REFS } from '$lib/data/rulebook-index';
+	import RulebookRefLink from '../reference/RulebookRefLink.svelte';
 
 	let { move, compact = false }: { move: Move; compact?: boolean } = $props();
 
@@ -55,8 +55,8 @@
 <div class="move-card card">
 	<button class="move-header" onclick={() => expanded = !expanded}>
 		<h4 class="move-name">{move.name}</h4>
-		{#if MOVE_PDF_REFS[move.id]}
-			<PdfRefLink ref={MOVE_PDF_REFS[move.id]} />
+		{#if MOVE_RULEBOOK_REFS[move.id]}
+			<RulebookRefLink section={MOVE_RULEBOOK_REFS[move.id]} />
 		{/if}
 		<span class="move-category">{move.category}</span>
 		<span class="expand-icon">{expanded ? '▾' : '▸'}</span>

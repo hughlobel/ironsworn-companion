@@ -5,9 +5,9 @@
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
 	import { loadFromLocalStorage, saveToLocalStorage } from '$lib/stores/persistence.svelte';
-	import { pdfStore } from '$lib/stores/pdf.svelte';
-	import { pdfPanelStore } from '$lib/stores/pdf-panel.svelte';
-	import PdfPanel from '$lib/components/reference/PdfPanel.svelte';
+	import { rulebookStore } from '$lib/stores/rulebook.svelte';
+	import { referencePanelStore } from '$lib/stores/reference-panel.svelte';
+	import RulebookPanel from '$lib/components/reference/RulebookPanel.svelte';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
@@ -18,7 +18,7 @@
 	onMount(() => {
 		loadFromLocalStorage();
 		loaded = true;
-		pdfStore.init();
+		rulebookStore.init();
 	});
 
 	// Auto-save on changes
@@ -56,7 +56,7 @@
 	}
 </script>
 
-<div class="app-shell" class:pdf-panel-open={pdfPanelStore.isOpen} class:pdf-fullscreen={pdfPanelStore.isFullscreen}>
+<div class="app-shell" class:pdf-panel-open={referencePanelStore.isOpen} class:pdf-fullscreen={referencePanelStore.isFullscreen}>
 	<nav class="sidebar" class:collapsed={sidebarCollapsed}>
 		<div class="sidebar-header">
 			<span style="font-size: 20px;">⚔</span>
@@ -135,6 +135,15 @@
 				</a>
 			</div>
 		{/if}
+
+		{#if !sidebarCollapsed}
+			<div class="sidebar-attribution">
+				<a href="https://www.ironswornrpg.com" target="_blank" rel="noopener noreferrer">Ironsworn</a> by
+				<a href="https://www.ironswornrpg.com" target="_blank" rel="noopener noreferrer">Shawn Tomkin</a>.
+				Licensed under
+				<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a>.
+			</div>
+		{/if}
 	</nav>
 
 	<main class="main-content">
@@ -143,7 +152,7 @@
 		{/if}
 	</main>
 
-	{#if pdfPanelStore.isOpen}
-		<PdfPanel />
+	{#if referencePanelStore.isOpen}
+		<RulebookPanel />
 	{/if}
 </div>

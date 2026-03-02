@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { AssetDefinition, CharacterAsset } from '$lib/data/types';
 	import { getAssetById } from '$lib/data/assets';
-	import { ASSET_PDF_REFS } from '$lib/data/pdf-index';
-	import PdfRefLink from '../reference/PdfRefLink.svelte';
+	import { ASSET_RULEBOOK_REFS } from '$lib/data/rulebook-index';
+	import RulebookRefLink from '../reference/RulebookRefLink.svelte';
 
 	let { asset, definition, ontoggle, ontrackchange, onremove }: {
 		asset: CharacterAsset;
@@ -21,8 +21,8 @@
 			<div>
 				<div class="asset-name-row">
 					<h4 class="asset-name">{asset.customName || def.name}</h4>
-					{#if ASSET_PDF_REFS[asset.definitionId]}
-						<PdfRefLink ref={ASSET_PDF_REFS[asset.definitionId]} />
+					{#if ASSET_RULEBOOK_REFS[asset.definitionId]}
+						<RulebookRefLink section={ASSET_RULEBOOK_REFS[asset.definitionId]} />
 					{/if}
 				</div>
 				<span class="asset-category">{def.category}</span>

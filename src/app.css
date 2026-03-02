@@ -209,6 +209,24 @@ html, body {
 	margin-top: auto;
 }
 
+.sidebar-attribution {
+	padding: var(--space-sm) var(--space-lg);
+	font-size: 10px;
+	line-height: 1.5;
+	color: var(--text-muted);
+	border-top: 1px solid var(--border);
+}
+
+.sidebar-attribution a {
+	color: var(--text-muted);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.sidebar-attribution a:hover {
+	color: var(--text-secondary);
+}
+
 .meter-row {
 	display: flex;
 	align-items: center;

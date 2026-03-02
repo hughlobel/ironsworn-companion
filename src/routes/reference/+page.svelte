@@ -1,86 +1,152 @@
 <script lang="ts">
-	import type { PdfKey } from '$lib/data/pdf-types';
-	import { REFERENCE_INDEX } from '$lib/data/pdf-index';
-	import { pdfStore } from '$lib/stores/pdf.svelte';
-	import { pdfPanelStore } from '$lib/stores/pdf-panel.svelte';
-	import PdfSetup from '$lib/components/reference/PdfSetup.svelte';
+	import { RULEBOOK_SECTIONS, type RulebookSection } from '$lib/data/rulebook-index';
+	import { referencePanelStore } from '$lib/stores/reference-panel.svelte';
 
-	// Browse mode state
 	let search = $state('');
-	let showSetup = $state(false);
 
-	const filteredEntries = $derived(
-		search.trim()
-			? REFERENCE_INDEX.filter(e =>
-				e.topic.toLowerCase().includes(search.toLowerCase()) ||
-				e.category.toLowerCase().includes(search.toLowerCase())
-			)
-			: REFERENCE_INDEX
-	);
-
-	// Group by category
-	const grouped = $derived(() => {
-		const map = new Map<string, typeof REFERENCE_INDEX>();
-		for (const entry of filteredEntries) {
-			if (!map.has(entry.category)) map.set(entry.category, []);
-			map.get(entry.category)!.push(entry);
-		}
-		return map;
-	});
-
-	function openTopic(pdfKey: PdfKey, page: number) {
-		pdfPanelStore.openPdf(pdfKey, page);
+	// Build chapter tree: level 1 sections are chapters, level 2 are sections, level 3 are subsections
+	interface TocEntry {
+		section: RulebookSection;
+		children: TocEntry[];
 	}
+
+	function buildToc(sections: RulebookSection[]): TocEntry[] {
+		const chapters: TocEntry[] = [];
+		const bySlug = new Map<string, TocEntry>();
+
+		for (const s of sections) {
+			const entry: TocEntry = { section: s, children: [] };
+			bySlug.set(s.slug, entry);
+
+			if (s.level === 1) {
+				chapters.push(entry);
+			} else if (s.parent) {
+				const parent = bySlug.get(s.parent);
+				if (parent) parent.children.push(entry);
+			}
+		}
+		return chapters;
+	}
+
+	const fullToc = buildToc(RULEBOOK_SECTIONS);
+
+	// Filter TOC based on search
+	function matchesSearch(entry: TocEntry, query: string): boolean {
+		if (entry.section.heading.toLowerCase().includes(query)) return true;
+		return entry.children.some(c => matchesSearch(c, query));
+	}
+
+	function filterToc(chapters: TocEntry[], query: string): TocEntry[] {
+		if (!query) return chapters;
+		return chapters
+			.filter(ch => matchesSearch(ch, query))
+			.map(ch => ({
+				...ch,
+				children: ch.children
+					.filter(sec => matchesSearch(sec, query))
+					.map(sec => ({
+						...sec,
+						children: sec.children.filter(sub =>
+							sub.section.heading.toLowerCase().includes(query)
+						)
+					}))
+			}));
+	}
+
+	const filteredToc = $derived(filterToc(fullToc, search.trim().toLowerCase()));
+
+	// Track which chapters are expanded
+	let expanded = $state(new Set<string>());
+
+	function toggleChapter(slug: string) {
+		const next = new Set(expanded);
+		if (next.has(slug)) next.delete(slug);
+		else next.add(slug);
+		expanded = next;
+	}
+
+	function openSection(slug: string) {
+		referencePanelStore.openSection(slug);
+	}
+
+	// When searching, auto-expand all
+	const isSearching = $derived(search.trim().length > 0);
 </script>
 
 <div class="reference-page">
 	<div class="browse-mode">
 		<div class="page-header">
-			<h2>Reference</h2>
-			<button
-				class="btn btn-sm"
-				onclick={() => showSetup = !showSetup}
-			>
-				{showSetup ? 'Hide' : 'Manage'} PDFs
-			</button>
+			<h2>Rulebook</h2>
 		</div>
 
-		{#if showSetup}
-			<PdfSetup />
-		{/if}
+		<div class="license-notice">
+			<strong>Ironsworn</strong> is written and designed by Shawn Tomkin. The text is licensed under the
+			<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+			For more information, visit <a href="https://www.ironswornrpg.com" target="_blank" rel="noopener noreferrer">ironswornrpg.com</a>.
+			<br/>
+			Inspired by
+			<a href="https://nboughton.uk/apps/ironsworn-campaign" target="_blank" rel="noopener noreferrer">Ironsworn Campaign</a> by Nick Boughton
+			and <a href="https://ironvault.quest/" target="_blank" rel="noopener noreferrer">Iron Vault</a>.
+		</div>
 
 		<div class="search-bar">
 			<input
 				type="text"
-				placeholder="Search topics..."
+				placeholder="Search sections..."
 				bind:value={search}
 				class="search-input"
 			/>
 		</div>
 
-		{#each [...grouped().entries()] as [category, entries]}
-			<div class="category-section">
-				<h3 class="category-title">{category}</h3>
-				<div class="topic-list">
-					{#each entries as entry}
-						{@const loaded = pdfStore.loadedPdfs[entry.ref.pdf]}
-						<button
-							class="topic-item"
-							class:disabled={!loaded}
-							title={loaded ? `${entry.topic} — p.${entry.ref.page}` : 'PDF not loaded'}
-							disabled={!loaded}
-							onclick={() => openTopic(entry.ref.pdf, entry.ref.page)}
-						>
-							<span class="topic-name">{entry.topic}</span>
-							<span class="topic-page">p.{entry.ref.page}</span>
-						</button>
-					{/each}
-				</div>
+		{#each filteredToc as chapter}
+			<div class="chapter-section">
+				<!-- Chapter heading (level 1) -->
+				<button
+					class="chapter-title"
+					onclick={() => toggleChapter(chapter.section.slug)}
+				>
+					<span class="chevron" class:open={isSearching || expanded.has(chapter.section.slug)}>&#9656;</span>
+					<span
+						class="chapter-name"
+						role="link"
+						tabindex="-1"
+						onclick={(e) => { e.stopPropagation(); openSection(chapter.section.slug); }}
+					>{chapter.section.heading}</span>
+				</button>
+
+				<!-- Sections (level 2) and subsections (level 3) -->
+				{#if isSearching || expanded.has(chapter.section.slug)}
+					<div class="section-list">
+						{#each chapter.children as sec}
+							<div class="section-group">
+								<button
+									class="section-item"
+									onclick={() => openSection(sec.section.slug)}
+								>
+									<span class="section-name">{sec.section.heading}</span>
+								</button>
+
+								{#if sec.children.length > 0}
+									<div class="subsection-list">
+										{#each sec.children as sub}
+											<button
+												class="subsection-item"
+												onclick={() => openSection(sub.section.slug)}
+											>
+												{sub.section.heading}
+											</button>
+										{/each}
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				{/if}
 			</div>
 		{/each}
 
-		{#if filteredEntries.length === 0}
-			<p class="text-muted" style="text-align:center; padding: var(--space-lg);">No topics match your search.</p>
+		{#if filteredToc.length === 0}
+			<p class="text-muted" style="text-align:center; padding: var(--space-lg);">No sections match your search.</p>
 		{/if}
 	</div>
 </div>
@@ -94,7 +160,7 @@
 	.browse-mode {
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-lg);
+		gap: var(--space-md);
 	}
 	.page-header {
 		display: flex;
@@ -121,53 +187,116 @@
 	.search-input::placeholder {
 		color: var(--text-muted);
 	}
-	.category-section {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-xs);
-	}
-	.category-title {
+
+	.license-notice {
 		font-size: 12px;
-		font-weight: 700;
-		text-transform: uppercase;
+		line-height: 1.6;
 		color: var(--text-muted);
-		letter-spacing: 0.5px;
-		padding-bottom: var(--space-xs);
-		border-bottom: 1px solid var(--border);
+		padding: var(--space-sm) var(--space-md);
+		background: var(--bg-raised);
+		border-radius: var(--radius-md);
+		border: 1px solid var(--border);
 	}
-	.topic-list {
+	.license-notice a {
+		color: var(--text-secondary);
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+	.license-notice a:hover {
+		color: var(--accent);
+	}
+
+	/* Chapter (level 1) */
+	.chapter-section {
 		display: flex;
 		flex-direction: column;
 	}
-	.topic-item {
+	.chapter-title {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		padding: var(--space-sm) var(--space-sm);
-		border-radius: var(--radius-sm);
-		color: var(--text-primary);
-		font-size: 14px;
-		cursor: pointer;
+		gap: var(--space-xs);
+		padding: var(--space-sm) var(--space-xs);
 		background: none;
 		border: none;
-		text-align: left;
+		cursor: pointer;
 		font-family: var(--font-body);
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--text-primary);
+		border-bottom: 1px solid var(--border);
+		text-align: left;
 		width: 100%;
 	}
-	.topic-item:hover:not(.disabled) {
+	.chapter-title:hover {
 		background: var(--bg-raised);
 	}
-	.topic-item.disabled {
-		opacity: 0.4;
-		cursor: default;
-	}
-	.topic-page {
-		font-size: 12px;
+	.chevron {
+		font-size: 11px;
 		color: var(--text-muted);
-		font-family: var(--font-mono);
+		transition: transform 0.15s;
+		flex-shrink: 0;
+		width: 14px;
+		text-align: center;
 	}
-	.btn-sm {
-		font-size: 12px;
+	.chevron.open {
+		transform: rotate(90deg);
+	}
+	.chapter-name:hover {
+		color: var(--accent);
+	}
+
+	/* Section (level 2) */
+	.section-list {
+		display: flex;
+		flex-direction: column;
+		padding-left: var(--space-md);
+	}
+	.section-group {
+		display: flex;
+		flex-direction: column;
+	}
+	.section-item {
+		display: flex;
+		align-items: center;
 		padding: var(--space-xs) var(--space-sm);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-family: var(--font-body);
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--text-secondary);
+		text-align: left;
+		width: 100%;
+		border-radius: var(--radius-sm);
+	}
+	.section-item:hover {
+		background: var(--bg-raised);
+		color: var(--accent);
+	}
+
+	/* Subsection (level 3) */
+	.subsection-list {
+		display: flex;
+		flex-direction: column;
+		padding-left: var(--space-lg);
+	}
+	.subsection-item {
+		display: flex;
+		align-items: center;
+		padding: 2px var(--space-sm);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-family: var(--font-body);
+		font-size: 13px;
+		color: var(--text-muted);
+		text-align: left;
+		width: 100%;
+		border-radius: var(--radius-sm);
+	}
+	.subsection-item:hover {
+		background: var(--bg-raised);
+		color: var(--accent);
 	}
 </style>

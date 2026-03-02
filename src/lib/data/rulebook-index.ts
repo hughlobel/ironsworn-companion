@@ -1,0 +1,364 @@
+// ── Rulebook section index ──
+// Maps section slugs to headings and line numbers in Ironsworn-Rulebook.md
+
+export interface RulebookSection {
+	slug: string;
+	heading: string;
+	level: 1 | 2 | 3;
+	line: number;
+	parent?: string;
+	category: string;
+}
+
+export const RULEBOOK_SECTIONS: RulebookSection[] = [
+	// Chapter 1: THE BASICS
+	{ slug: 'the-basics', heading: 'The Basics', level: 1, line: 321, category: 'Core Rules' },
+	{ slug: 'playing-ironsworn', heading: 'Playing Ironsworn', level: 2, line: 324, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'what-you-need', heading: 'What You Need', level: 3, line: 337, parent: 'playing-ironsworn', category: 'Core Rules' },
+	{ slug: 'mechanics-and-the-fiction', heading: 'Mechanics and the Fiction', level: 3, line: 354, parent: 'playing-ironsworn', category: 'Core Rules' },
+	{ slug: 'the-setting', heading: 'The Setting', level: 3, line: 362, parent: 'playing-ironsworn', category: 'Core Rules' },
+	{ slug: 'iron-vows', heading: 'Iron Vows', level: 3, line: 390, parent: 'playing-ironsworn', category: 'Core Rules' },
+	{ slug: 'your-character-intro', heading: 'Your Character', level: 3, line: 403, parent: 'playing-ironsworn', category: 'Core Rules' },
+	{ slug: 'moves-overview', heading: 'Moves', level: 2, line: 433, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'the-action-roll', heading: 'The Action Roll', level: 2, line: 465, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'matches', heading: 'Matches', level: 3, line: 500, parent: 'the-action-roll', category: 'Core Rules' },
+	{ slug: 'gms-and-the-dice', heading: "GM's and the Dice", level: 3, line: 513, parent: 'the-action-roll', category: 'Core Rules' },
+	{ slug: 'momentum', heading: 'Momentum', level: 2, line: 519, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'gaining-momentum', heading: 'Gaining Momentum', level: 3, line: 530, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'losing-momentum', heading: 'Losing Momentum', level: 3, line: 536, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'burning-momentum', heading: 'Burning Momentum', level: 3, line: 549, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'resetting-momentum', heading: 'Resetting Momentum', level: 3, line: 569, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'suffering-negative-momentum', heading: 'Suffering Negative Momentum', level: 3, line: 578, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'minimum-momentum', heading: 'Minimum Momentum', level: 3, line: 589, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'max-momentum', heading: 'Max Momentum', level: 3, line: 598, parent: 'momentum', category: 'Core Rules' },
+	{ slug: 'progress-tracks', heading: 'Progress Tracks', level: 2, line: 602, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'challenge-ranks', heading: 'Challenge Ranks', level: 3, line: 615, parent: 'progress-tracks', category: 'Core Rules' },
+	{ slug: 'marking-progress', heading: 'Marking Progress', level: 3, line: 623, parent: 'progress-tracks', category: 'Core Rules' },
+	{ slug: 'progress-moves', heading: 'Progress Moves', level: 3, line: 650, parent: 'progress-tracks', category: 'Core Rules' },
+	{ slug: 'progress-rolls', heading: 'Progress Rolls', level: 3, line: 666, parent: 'progress-tracks', category: 'Core Rules' },
+	{ slug: 'harm', heading: 'Harm', level: 2, line: 686, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'stress', heading: 'Stress', level: 2, line: 712, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'assets-overview', heading: 'Assets', level: 2, line: 732, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'oracles-overview', heading: 'Oracles', level: 2, line: 751, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'bonds-overview', heading: 'Bonds', level: 2, line: 795, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'other-characters', heading: 'Other Characters', level: 2, line: 803, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'equipment-overview', heading: 'Equipment', level: 2, line: 817, parent: 'the-basics', category: 'Core Rules' },
+	{ slug: 'flow-of-play', heading: 'The Flow of Play', level: 2, line: 832, parent: 'the-basics', category: 'Core Rules' },
+
+	// Chapter 2: YOUR CHARACTER
+	{ slug: 'your-character', heading: 'Your Character', level: 1, line: 896, category: 'Character' },
+	{ slug: 'you-are-ironsworn', heading: 'You Are Ironsworn', level: 2, line: 899, parent: 'your-character', category: 'Character' },
+	{ slug: 'character-basics', heading: 'Character Basics', level: 2, line: 931, parent: 'your-character', category: 'Character' },
+	{ slug: 'character-name', heading: 'Name', level: 3, line: 933, parent: 'character-basics', category: 'Character' },
+	{ slug: 'stats', heading: 'Stats', level: 3, line: 938, parent: 'character-basics', category: 'Character' },
+	{ slug: 'health', heading: 'Health', level: 3, line: 949, parent: 'character-basics', category: 'Character' },
+	{ slug: 'spirit', heading: 'Spirit', level: 3, line: 958, parent: 'character-basics', category: 'Character' },
+	{ slug: 'supply', heading: 'Supply', level: 3, line: 965, parent: 'character-basics', category: 'Character' },
+	{ slug: 'character-momentum', heading: 'Momentum', level: 3, line: 978, parent: 'character-basics', category: 'Character' },
+	{ slug: 'vows', heading: 'Vows', level: 2, line: 992, parent: 'your-character', category: 'Character' },
+	{ slug: 'character-bonds', heading: 'Bonds', level: 2, line: 999, parent: 'your-character', category: 'Character' },
+	{ slug: 'debilities', heading: 'Debilities', level: 2, line: 1008, parent: 'your-character', category: 'Character' },
+	{ slug: 'conditions', heading: 'Conditions', level: 3, line: 1020, parent: 'debilities', category: 'Character' },
+	{ slug: 'banes', heading: 'Banes', level: 3, line: 1041, parent: 'debilities', category: 'Character' },
+	{ slug: 'burdens', heading: 'Burdens', level: 3, line: 1052, parent: 'debilities', category: 'Character' },
+	{ slug: 'character-assets', heading: 'Assets', level: 2, line: 1064, parent: 'your-character', category: 'Character' },
+	{ slug: 'asset-types', heading: 'Asset Types', level: 3, line: 1072, parent: 'character-assets', category: 'Character' },
+	{ slug: 'experience', heading: 'Experience', level: 2, line: 1173, parent: 'your-character', category: 'Character' },
+	{ slug: 'character-equipment', heading: 'Equipment', level: 2, line: 1199, parent: 'your-character', category: 'Character' },
+	{ slug: 'becoming-ironsworn', heading: 'Becoming Ironsworn', level: 2, line: 1212, parent: 'your-character', category: 'Character' },
+	{ slug: 'character-creation-summary', heading: 'Character Creation Summary', level: 2, line: 1223, parent: 'your-character', category: 'Character' },
+
+	// Chapter 3: MOVES
+	{ slug: 'moves', heading: 'Moves', level: 1, line: 1232, category: 'Moves' },
+	{ slug: 'making-moves', heading: 'Making Moves', level: 2, line: 1235, parent: 'moves', category: 'Moves' },
+	{ slug: 'move-outcomes', heading: 'Move Outcomes', level: 3, line: 1243, parent: 'making-moves', category: 'Moves' },
+	{ slug: 'best-practices-for-moves', heading: 'Best Practices for Moves', level: 3, line: 1259, parent: 'making-moves', category: 'Moves' },
+	{ slug: 'making-group-moves', heading: 'Making Group Moves', level: 3, line: 1289, parent: 'making-moves', category: 'Moves' },
+	{ slug: 'making-progress-moves', heading: 'Making Progress Moves', level: 3, line: 1299, parent: 'making-moves', category: 'Moves' },
+	{ slug: 'equipment-and-moves', heading: 'Equipment and Moves', level: 3, line: 1307, parent: 'making-moves', category: 'Moves' },
+	{ slug: 'initiative', heading: 'Initiative', level: 3, line: 1325, parent: 'making-moves', category: 'Moves' },
+	{ slug: 'move-glossary', heading: 'Move Glossary', level: 3, line: 1352, parent: 'making-moves', category: 'Moves' },
+
+	// Adventure Moves
+	{ slug: 'adventure-moves', heading: 'Adventure Moves', level: 2, line: 1459, parent: 'moves', category: 'Adventure Moves' },
+	{ slug: 'face-danger', heading: 'Face Danger', level: 3, line: 1463, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'secure-advantage', heading: 'Secure an Advantage', level: 3, line: 1486, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'gather-information', heading: 'Gather Information', level: 3, line: 1509, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'heal', heading: 'Heal', level: 3, line: 1524, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'resupply', heading: 'Resupply', level: 3, line: 1535, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'make-camp', heading: 'Make Camp', level: 3, line: 1546, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'undertake-journey', heading: 'Undertake a Journey', level: 3, line: 1567, parent: 'adventure-moves', category: 'Adventure Moves' },
+	{ slug: 'reach-destination', heading: 'Reach Your Destination', level: 3, line: 1636, parent: 'adventure-moves', category: 'Adventure Moves' },
+
+	// Relationship Moves
+	{ slug: 'relationship-moves', heading: 'Relationship Moves', level: 2, line: 1654, parent: 'moves', category: 'Relationship Moves' },
+	{ slug: 'compel', heading: 'Compel', level: 3, line: 1658, parent: 'relationship-moves', category: 'Relationship Moves' },
+	{ slug: 'sojourn', heading: 'Sojourn', level: 3, line: 1683, parent: 'relationship-moves', category: 'Relationship Moves' },
+	{ slug: 'draw-circle', heading: 'Draw the Circle', level: 3, line: 1719, parent: 'relationship-moves', category: 'Relationship Moves' },
+	{ slug: 'forge-bond', heading: 'Forge a Bond', level: 3, line: 1738, parent: 'relationship-moves', category: 'Relationship Moves' },
+	{ slug: 'test-bond', heading: 'Test Your Bond', level: 3, line: 1770, parent: 'relationship-moves', category: 'Relationship Moves' },
+	{ slug: 'aid-ally', heading: 'Aid Your Ally', level: 3, line: 1786, parent: 'relationship-moves', category: 'Relationship Moves' },
+	{ slug: 'write-epilogue', heading: 'Write Your Epilogue', level: 3, line: 1805, parent: 'relationship-moves', category: 'Relationship Moves' },
+
+	// Combat Moves
+	{ slug: 'combat-moves', heading: 'Combat Moves', level: 2, line: 1817, parent: 'moves', category: 'Combat Moves' },
+	{ slug: 'enter-fray', heading: 'Enter the Fray', level: 3, line: 1822, parent: 'combat-moves', category: 'Combat Moves' },
+	{ slug: 'strike', heading: 'Strike', level: 3, line: 1850, parent: 'combat-moves', category: 'Combat Moves' },
+	{ slug: 'clash', heading: 'Clash', level: 3, line: 1868, parent: 'combat-moves', category: 'Combat Moves' },
+	{ slug: 'turn-tide', heading: 'Turn the Tide', level: 3, line: 1892, parent: 'combat-moves', category: 'Combat Moves' },
+	{ slug: 'end-fight', heading: 'End the Fight', level: 3, line: 1906, parent: 'combat-moves', category: 'Combat Moves' },
+	{ slug: 'battle', heading: 'Battle', level: 3, line: 1941, parent: 'combat-moves', category: 'Combat Moves' },
+	{ slug: 'other-moves-in-combat', heading: 'Other Moves in Combat', level: 3, line: 1970, parent: 'combat-moves', category: 'Combat Moves' },
+
+	// Suffer Moves
+	{ slug: 'suffer-moves', heading: 'Suffer Moves', level: 2, line: 2058, parent: 'moves', category: 'Suffer Moves' },
+	{ slug: 'endure-harm', heading: 'Endure Harm', level: 3, line: 2074, parent: 'suffer-moves', category: 'Suffer Moves' },
+	{ slug: 'face-death', heading: 'Face Death', level: 3, line: 2115, parent: 'suffer-moves', category: 'Suffer Moves' },
+	{ slug: 'companion-endure-harm', heading: 'Companion Endure Harm', level: 3, line: 2131, parent: 'suffer-moves', category: 'Suffer Moves' },
+	{ slug: 'endure-stress', heading: 'Endure Stress', level: 3, line: 2148, parent: 'suffer-moves', category: 'Suffer Moves' },
+	{ slug: 'face-desolation', heading: 'Face Desolation', level: 3, line: 2185, parent: 'suffer-moves', category: 'Suffer Moves' },
+	{ slug: 'out-of-supply', heading: 'Out of Supply', level: 3, line: 2199, parent: 'suffer-moves', category: 'Suffer Moves' },
+	{ slug: 'face-setback', heading: 'Face a Setback', level: 3, line: 2206, parent: 'suffer-moves', category: 'Suffer Moves' },
+
+	// Quest Moves
+	{ slug: 'quest-moves', heading: 'Quest Moves', level: 2, line: 2218, parent: 'moves', category: 'Quest Moves' },
+	{ slug: 'swear-iron-vow', heading: 'Swear an Iron Vow', level: 3, line: 2222, parent: 'quest-moves', category: 'Quest Moves' },
+	{ slug: 'reach-milestone', heading: 'Reach a Milestone', level: 3, line: 2248, parent: 'quest-moves', category: 'Quest Moves' },
+	{ slug: 'fulfill-vow', heading: 'Fulfill Your Vow', level: 3, line: 2269, parent: 'quest-moves', category: 'Quest Moves' },
+	{ slug: 'forsake-vow', heading: 'Forsake Your Vow', level: 3, line: 2295, parent: 'quest-moves', category: 'Quest Moves' },
+	{ slug: 'advance', heading: 'Advance', level: 3, line: 2308, parent: 'quest-moves', category: 'Quest Moves' },
+
+	// Fate Moves
+	{ slug: 'fate-moves', heading: 'Fate Moves', level: 2, line: 2319, parent: 'moves', category: 'Fate Moves' },
+	{ slug: 'pay-the-price', heading: 'Pay the Price', level: 3, line: 2333, parent: 'fate-moves', category: 'Fate Moves' },
+	{ slug: 'ask-the-oracle', heading: 'Ask the Oracle', level: 3, line: 2394, parent: 'fate-moves', category: 'Fate Moves' },
+
+	// Chapter 4: YOUR WORLD
+	{ slug: 'your-world', heading: 'Your World', level: 1, line: 2474, category: 'World' },
+	{ slug: 'welcome-to-the-ironlands', heading: 'Welcome to the Ironlands', level: 2, line: 2477, parent: 'your-world', category: 'World' },
+	{ slug: 'regions-of-the-ironlands', heading: 'Regions of the Ironlands', level: 2, line: 2501, parent: 'your-world', category: 'World' },
+	{ slug: 'barrier-islands', heading: 'Barrier Islands', level: 3, line: 2523, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'ragged-coast', heading: 'Ragged Coast', level: 3, line: 2545, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'deep-wilds', heading: 'Deep Wilds', level: 3, line: 2567, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'flooded-lands', heading: 'Flooded Lands', level: 3, line: 2588, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'havens', heading: 'Havens', level: 3, line: 2610, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'hinterlands', heading: 'Hinterlands', level: 3, line: 2631, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'tempest-hills', heading: 'Tempest Hills', level: 3, line: 2654, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'veiled-mountains', heading: 'Veiled Mountains', level: 3, line: 2677, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'shattered-wastes', heading: 'Shattered Wastes', level: 3, line: 2697, parent: 'regions-of-the-ironlands', category: 'World' },
+	{ slug: 'your-truths', heading: 'Your Truths', level: 2, line: 2715, parent: 'your-world', category: 'World' },
+	{ slug: 'mapping-your-journeys', heading: 'Mapping Your Journeys', level: 2, line: 2785, parent: 'your-world', category: 'World' },
+
+	// Chapter 5: FOES AND ENCOUNTERS
+	{ slug: 'foes-and-encounters', heading: 'Foes and Encounters', level: 1, line: 2822, category: 'Foes' },
+	{ slug: 'npcs-in-the-ironlands', heading: 'NPCs in the Ironlands', level: 2, line: 2826, parent: 'foes-and-encounters', category: 'Foes' },
+	{ slug: 'ironlanders', heading: 'Ironlanders', level: 2, line: 2939, parent: 'foes-and-encounters', category: 'Foes' },
+	{ slug: 'firstborn', heading: 'Firstborn', level: 2, line: 3094, parent: 'foes-and-encounters', category: 'Foes' },
+	{ slug: 'animals', heading: 'Animals', level: 2, line: 3248, parent: 'foes-and-encounters', category: 'Foes' },
+	{ slug: 'beasts', heading: 'Beasts', level: 2, line: 3374, parent: 'foes-and-encounters', category: 'Foes' },
+	{ slug: 'horrors', heading: 'Horrors', level: 2, line: 3543, parent: 'foes-and-encounters', category: 'Foes' },
+
+	// Chapter 6: ORACLES
+	{ slug: 'oracles', heading: 'Oracles', level: 1, line: 3730, category: 'Oracles' },
+	{ slug: 'seeking-inspiration', heading: 'Seeking Inspiration', level: 2, line: 3733, parent: 'oracles', category: 'Oracles' },
+	{ slug: 'ironland-oracles', heading: 'Ironland Oracles', level: 2, line: 3763, parent: 'oracles', category: 'Oracles' },
+	{ slug: 'oracle-action', heading: 'Oracle 1: Action', level: 3, line: 3888, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-theme', heading: 'Oracle 2: Theme', level: 3, line: 3992, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-region', heading: 'Oracle 3: Region', level: 3, line: 4149, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-location', heading: 'Oracle 4: Location', level: 3, line: 4096, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-coastal-waters', heading: 'Oracle 5: Coastal Waters Location', level: 3, line: 4161, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-location-descriptor', heading: 'Oracle 6: Location Descriptor', level: 3, line: 4182, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-settlement-name', heading: 'Oracle 7: Settlement Name', level: 3, line: 4236, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-quick-settlement', heading: 'Oracle 8: Quick Settlement Name Generator', level: 3, line: 4298, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-settlement-trouble', heading: 'Oracle 9: Settlement Trouble', level: 3, line: 4375, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-character-role', heading: 'Oracle 10: Character Role', level: 3, line: 4379, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-character-goal', heading: 'Oracle 11: Character Goal', level: 3, line: 4381, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-character-descriptor', heading: 'Oracle 12: Character Descriptor', level: 3, line: 4448, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-ironlander-names', heading: 'Oracle 13: Ironlander Names', level: 3, line: 4552, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-elf-names', heading: 'Oracle 14: Elf Names', level: 3, line: 4758, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-other-names', heading: 'Oracle 15: Other Names', level: 3, line: 4812, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-combat-action', heading: 'Oracle 16: Combat Action', level: 3, line: 4842, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-mystic-backlash', heading: 'Oracle 17: Mystic Backlash', level: 3, line: 4864, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-major-plot-twist', heading: 'Oracle 18: Major Plot Twist', level: 3, line: 4923, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'oracle-challenge-rank', heading: 'Oracle 19: Challenge Rank', level: 3, line: 4925, parent: 'ironland-oracles', category: 'Oracles' },
+	{ slug: 'more-oracles', heading: 'More Oracles', level: 2, line: 4934, parent: 'oracles', category: 'Oracles' },
+
+	// Chapter 7: GAMEPLAY IN DEPTH
+	{ slug: 'gameplay-in-depth', heading: 'Gameplay in Depth', level: 1, line: 4951, category: 'Gameplay' },
+	{ slug: 'starting-your-campaign', heading: 'Starting Your Campaign', level: 2, line: 4954, parent: 'gameplay-in-depth', category: 'Gameplay' },
+	{ slug: 'the-mechanics-and-the-fiction', heading: 'The Mechanics and the Fiction', level: 2, line: 5105, parent: 'gameplay-in-depth', category: 'Gameplay' },
+	{ slug: 'managing-your-quests', heading: 'Managing Your Quests', level: 2, line: 5222, parent: 'gameplay-in-depth', category: 'Gameplay' },
+	{ slug: 'principles', heading: 'Principles', level: 2, line: 5376, parent: 'gameplay-in-depth', category: 'Gameplay' },
+	{ slug: 'gameplay-options', heading: 'Gameplay Options', level: 2, line: 5474, parent: 'gameplay-in-depth', category: 'Gameplay' },
+	{ slug: 'scene-challenges', heading: 'Scene Challenges', level: 3, line: 5542, parent: 'gameplay-options', category: 'Gameplay' },
+	{ slug: 'hacking-ironsworn', heading: 'Hacking Ironsworn', level: 2, line: 5613, parent: 'gameplay-in-depth', category: 'Gameplay' },
+	{ slug: 'extended-example', heading: 'Extended Example of Play', level: 2, line: 5694, parent: 'gameplay-in-depth', category: 'Gameplay' },
+];
+
+// ── Move ID → Rulebook section slug ──
+export const MOVE_RULEBOOK_REFS: Record<string, string> = {
+	// Adventure Moves
+	'face-danger':         'face-danger',
+	'secure-advantage':    'secure-advantage',
+	'gather-information':  'gather-information',
+	'heal':                'heal',
+	'resupply':            'resupply',
+	'make-camp':           'make-camp',
+	'undertake-journey':   'undertake-journey',
+	'reach-destination':   'reach-destination',
+
+	// Relationship Moves
+	'compel':              'compel',
+	'sojourn':             'sojourn',
+	'draw-circle':         'draw-circle',
+	'forge-bond':          'forge-bond',
+	'test-bond':           'test-bond',
+	'aid-ally':            'aid-ally',
+	'write-epilogue':      'write-epilogue',
+
+	// Combat Moves
+	'enter-fray':          'enter-fray',
+	'strike':              'strike',
+	'clash':               'clash',
+	'turn-tide':           'turn-tide',
+	'end-fight':           'end-fight',
+	'battle':              'battle',
+
+	// Suffer Moves
+	'endure-harm':         'endure-harm',
+	'face-death':          'face-death',
+	'companion-endure-harm': 'companion-endure-harm',
+	'endure-stress':       'endure-stress',
+	'face-desolation':     'face-desolation',
+	'out-of-supply':       'out-of-supply',
+	'face-setback':        'face-setback',
+
+	// Quest Moves
+	'swear-iron-vow':      'swear-iron-vow',
+	'reach-milestone':     'reach-milestone',
+	'fulfill-vow':         'fulfill-vow',
+	'forsake-vow':         'forsake-vow',
+	'advance':             'advance',
+
+	// Fate Moves
+	'pay-the-price':       'pay-the-price',
+	'ask-the-oracle':      'ask-the-oracle',
+};
+
+// ── Oracle table ID → Rulebook section slug ──
+export const ORACLE_RULEBOOK_REFS: Record<string, string> = {
+	'action':               'oracle-action',
+	'theme':                'oracle-theme',
+	'region':               'oracle-region',
+	'location':             'oracle-location',
+	'pay-the-price':        'pay-the-price',
+	'character-role':       'oracle-character-role',
+	'character-descriptor': 'oracle-character-descriptor',
+	'ironlander-name':      'oracle-ironlander-names',
+	'elf-name':             'oracle-elf-names',
+	'giant-name':           'oracle-other-names',
+	'varou-name':           'oracle-other-names',
+	'troll-name':           'oracle-other-names',
+	'settlement-name':      'oracle-settlement-name',
+	'settlement-trouble':   'oracle-settlement-trouble',
+	'character-goal':       'oracle-character-goal',
+	'character-disposition': 'oracle-character-descriptor',
+	'character-activity':   'oracle-character-descriptor',
+	'coastal-features':     'oracle-coastal-waters',
+	'mystic-backlash':      'oracle-mystic-backlash',
+	'major-plot-twist':     'oracle-major-plot-twist',
+	'combat-action':        'oracle-combat-action',
+};
+
+// ── Asset ID → Rulebook section slug ──
+// Assets don't have individual sections in the rulebook markdown,
+// so we point to the assets overview section
+export const ASSET_RULEBOOK_REFS: Record<string, string> = {
+	'cave-lion':     'character-assets',
+	'hawk':          'character-assets',
+	'horse':         'character-assets',
+	'hound':         'character-assets',
+	'kindred':       'character-assets',
+	'young-wyvern':  'character-assets',
+	'herbalist':     'character-assets',
+	'hunter':        'character-assets',
+	'ironclad':      'character-assets',
+	'ritualist':     'character-assets',
+	'shadow-walk':   'character-assets',
+	'wayfinder':     'character-assets',
+	'archer':        'character-assets',
+	'berserker':     'character-assets',
+	'blade-bound':   'character-assets',
+	'shield-bearer': 'character-assets',
+	'augur':         'character-assets',
+	'bind':          'character-assets',
+	'communion':     'character-assets',
+	'leech':         'character-assets',
+	'scry':          'character-assets',
+	'visage':        'character-assets',
+	'ward':          'character-assets',
+};
+
+// ── Browsable reference index ──
+export interface IndexEntry {
+	topic: string;
+	category: string;
+	section: string; // section slug
+}
+
+export const REFERENCE_INDEX: IndexEntry[] = [
+	// Core Rules
+	{ topic: 'The Basics',              category: 'Core Rules',    section: 'the-basics' },
+	{ topic: 'Your Character',          category: 'Core Rules',    section: 'your-character-intro' },
+	{ topic: 'Stats',                   category: 'Core Rules',    section: 'stats' },
+	{ topic: 'Momentum',               category: 'Core Rules',    section: 'momentum' },
+	{ topic: 'Tracks & Progress',       category: 'Core Rules',    section: 'progress-tracks' },
+	{ topic: 'Assets Overview',         category: 'Core Rules',    section: 'assets-overview' },
+	{ topic: 'Bonds',                   category: 'Core Rules',    section: 'bonds-overview' },
+
+	// Gameplay
+	{ topic: 'Making Moves',            category: 'Gameplay',      section: 'making-moves' },
+	{ topic: 'Action Roll',             category: 'Gameplay',      section: 'the-action-roll' },
+	{ topic: 'Progress Roll',           category: 'Gameplay',      section: 'progress-rolls' },
+	{ topic: 'Matches',                 category: 'Gameplay',      section: 'matches' },
+	{ topic: 'Harm & Stress',           category: 'Gameplay',      section: 'harm' },
+	{ topic: 'Equipment & Vehicles',    category: 'Gameplay',      section: 'equipment-overview' },
+
+	// World
+	{ topic: 'The Ironlands',           category: 'World',         section: 'welcome-to-the-ironlands' },
+	{ topic: 'Regions Overview',        category: 'World',         section: 'regions-of-the-ironlands' },
+	{ topic: 'Communities',             category: 'World',         section: 'your-truths' },
+	{ topic: 'Iron Vows',               category: 'World',         section: 'iron-vows' },
+	{ topic: 'Foes & Encounters',       category: 'World',         section: 'foes-and-encounters' },
+
+	// Oracles
+	{ topic: 'Using Oracles',           category: 'Oracles',       section: 'seeking-inspiration' },
+	{ topic: 'Action & Theme',          category: 'Oracles',       section: 'oracle-action' },
+	{ topic: 'Combat Action',           category: 'Oracles',       section: 'oracle-combat-action' },
+	{ topic: 'Plot Twist',              category: 'Oracles',       section: 'oracle-major-plot-twist' },
+	{ topic: 'Settlement Oracles',      category: 'Oracles',       section: 'oracle-settlement-name' },
+	{ topic: 'Character Oracles',       category: 'Oracles',       section: 'oracle-character-role' },
+	{ topic: 'Name Oracles',            category: 'Oracles',       section: 'oracle-ironlander-names' },
+
+	// Gameplay In Depth
+	{ topic: 'Starting Your Campaign',  category: 'Gameplay Depth', section: 'starting-your-campaign' },
+	{ topic: 'Principles',              category: 'Gameplay Depth', section: 'principles' },
+	{ topic: 'Gameplay Options',        category: 'Gameplay Depth', section: 'gameplay-options' },
+];
+
+// Lookup helper
+const sectionMap = new Map(RULEBOOK_SECTIONS.map(s => [s.slug, s]));
+
+export function getSection(slug: string): RulebookSection | undefined {
+	return sectionMap.get(slug);
+}
+
+export function getSectionByLine(line: number): RulebookSection | undefined {
+	// Find the section that contains this line (last section with line <= given line)
+	let result: RulebookSection | undefined;
+	for (const s of RULEBOOK_SECTIONS) {
+		if (s.line <= line) result = s;
+		else break;
+	}
+	return result;
+}
