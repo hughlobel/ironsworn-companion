@@ -1,4 +1,4 @@
-import type { Campaign, ProgressTrack, JournalEntry, JournalEntryType, DiceRoll } from '$lib/data/types';
+import type { Campaign, ProgressTrack, JournalEntry, JournalEntryType, DiceRoll, NPC, Location, DelveSite } from '$lib/data/types';
 import { characterStore } from './character.svelte';
 
 function createCampaignStore() {
@@ -9,6 +9,9 @@ function createCampaignStore() {
 	let campaignId = $state(crypto.randomUUID());
 	let campaignName = $state('New Campaign');
 	let createdAt = $state(Date.now());
+	let npcs = $state<NPC[]>([]);
+	let locations = $state<Location[]>([]);
+	let sites = $state<DelveSite[]>([]);
 
 	return {
 		get tracks() { return tracks; },
@@ -17,6 +20,11 @@ function createCampaignStore() {
 		get session() { return session; },
 		get campaignId() { return campaignId; },
 		get campaignName() { return campaignName; },
+		get npcs() { return npcs; },
+		get locations() { return locations; },
+		get sites() { return sites; },
+		get activeSites() { return sites.filter(s => !s.completed); },
+		get completedSites() { return sites.filter(s => s.completed); },
 
 		setCampaignName(name: string) { campaignName = name; },
 		newSession() { session++; },
@@ -40,6 +48,27 @@ function createCampaignStore() {
 		get completedTracks() {
 			return tracks.filter(t => t.completed);
 		},
+
+		// ── NPCs ──
+		addNpc(npc: NPC) { npcs = [...npcs, npc]; },
+		updateNpc(id: string, updater: (n: NPC) => NPC) {
+			npcs = npcs.map(n => n.id === id ? updater(n) : n);
+		},
+		removeNpc(id: string) { npcs = npcs.filter(n => n.id !== id); },
+
+		// ── Locations ──
+		addLocation(loc: Location) { locations = [...locations, loc]; },
+		updateLocation(id: string, updater: (l: Location) => Location) {
+			locations = locations.map(l => l.id === id ? updater(l) : l);
+		},
+		removeLocation(id: string) { locations = locations.filter(l => l.id !== id); },
+
+		// ── Delve Sites ──
+		addSite(site: DelveSite) { sites = [...sites, site]; },
+		updateSite(id: string, updater: (s: DelveSite) => DelveSite) {
+			sites = sites.map(s => s.id === id ? updater(s) : s);
+		},
+		removeSite(id: string) { sites = sites.filter(s => s.id !== id); },
 
 		// ── Journal ──
 		addJournalEntry(type: JournalEntryType, text: string, data?: Record<string, unknown>) {
@@ -88,7 +117,10 @@ function createCampaignStore() {
 				rollHistory: JSON.parse(JSON.stringify(rollHistory)),
 				session,
 				createdAt,
-				updatedAt: Date.now()
+				updatedAt: Date.now(),
+				npcs: JSON.parse(JSON.stringify(npcs)),
+				locations: JSON.parse(JSON.stringify(locations)),
+				sites: JSON.parse(JSON.stringify(sites))
 			};
 		},
 
@@ -101,6 +133,9 @@ function createCampaignStore() {
 			rollHistory = data.rollHistory || [];
 			session = data.session;
 			createdAt = data.createdAt;
+			npcs = data.npcs ?? [];
+			locations = data.locations ?? [];
+			sites = data.sites ?? [];
 		},
 
 		reset() {
@@ -109,6 +144,9 @@ function createCampaignStore() {
 			tracks = [];
 			journal = [];
 			rollHistory = [];
+			npcs = [];
+			locations = [];
+			sites = [];
 			session = 1;
 			createdAt = Date.now();
 			characterStore.reset();

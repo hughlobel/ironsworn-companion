@@ -28,6 +28,9 @@
 		const _ = JSON.stringify(characterStore.character);
 		const __ = JSON.stringify(campaignStore.tracks);
 		const ___ = campaignStore.journal.length;
+		const ____ = JSON.stringify(campaignStore.npcs);
+		const _____ = JSON.stringify(campaignStore.locations);
+		const ______ = JSON.stringify(campaignStore.sites);
 		// Debounce save
 		const timer = setTimeout(() => saveToLocalStorage(), 500);
 		return () => clearTimeout(timer);
@@ -39,6 +42,8 @@
 		{ href: `${base}/moves`, label: 'Moves', icon: '📜' },
 		{ href: `${base}/tracks`, label: 'Tracks', icon: '◼' },
 		{ href: `${base}/oracles`, label: 'Oracles', icon: '🎲' },
+		{ href: `${base}/world`, label: 'World', icon: '🌍' },
+		{ href: `${base}/delves`, label: 'Delves', icon: '🕳' },
 		{ href: `${base}/journal`, label: 'Journal', icon: '📖' },
 		{ href: `${base}/reference`, label: 'Reference', icon: '📚' },
 	];

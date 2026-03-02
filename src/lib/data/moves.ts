@@ -443,6 +443,94 @@ export const MOVES: Move[] = [
 			weak_hit: 'N/A',
 			miss: 'N/A'
 		}
+	},
+
+	// ══════════════════════════════════
+	// DELVE MOVES
+	// ══════════════════════════════════
+	{
+		id: 'discover-site',
+		name: 'Discover a Site',
+		category: 'delve',
+		text: 'When you resolve to enter a perilous site in pursuit of an objective, choose the site\'s theme and domain, and give it a rank. If you are advancing upon a known site, roll +wits.',
+		stats: ['wits'],
+		outcomes: {
+			strong_hit: 'You know this place. Envision the nature of the site (Ask the Oracle if unsure). Take +2 momentum.',
+			weak_hit: 'You have gathered some intelligence on this site. Envision what you know (Ask the Oracle if unsure). Take +1 momentum.',
+			miss: 'You must Delve the Depths to explore this place. You are unprepared or misinformed — Pay the Price.'
+		}
+	},
+	{
+		id: 'delve-the-depths',
+		name: 'Delve the Depths',
+		category: 'delve',
+		text: 'When you traverse an area within a perilous site, envision your surroundings (Ask the Oracle if unsure). Then, consider your approach. If you navigate with haste: roll +edge. If you move carefully or quietly: roll +shadow. If you rely on your senses or study your environment: roll +wits.',
+		stats: ['edge', 'shadow', 'wits'],
+		outcomes: {
+			strong_hit: 'You delve deeper. Mark progress and Find an Opportunity.',
+			weak_hit: 'Roll on the Delve Feature oracle table and envision what you encounter. Mark progress.',
+			miss: 'Reveal a Danger.'
+		}
+	},
+	{
+		id: 'find-opportunity',
+		name: 'Find an Opportunity',
+		category: 'delve',
+		text: 'When you encounter a helpful aspect of the site, roll on the Delve Opportunity oracle. Then, choose one: Gather information, prepare, or take action. If you act on the opportunity, take +1 on your next move within the site (one time only).',
+		stats: [],
+		outcomes: {
+			strong_hit: 'N/A — this move has no roll. Roll on the opportunity table.',
+			weak_hit: 'N/A',
+			miss: 'N/A'
+		}
+	},
+	{
+		id: 'reveal-danger',
+		name: 'Reveal a Danger',
+		category: 'delve',
+		text: 'When you encounter a threat within a perilous site, envision the danger or roll on the Delve Danger table. Choose from: Check your gear, face the danger, or retreat.',
+		stats: [],
+		outcomes: {
+			strong_hit: 'N/A — this move has no roll. Roll on the danger table.',
+			weak_hit: 'N/A',
+			miss: 'N/A'
+		}
+	},
+	{
+		id: 'check-your-gear',
+		name: 'Check Your Gear',
+		category: 'delve',
+		text: 'When you check to see if you have a specific item or resource, roll +supply.',
+		stats: ['supply' as any],
+		outcomes: {
+			strong_hit: 'You have it. Take +1 momentum.',
+			weak_hit: 'You have it, but your resources are depleted. Take +1 momentum and suffer -1 supply.',
+			miss: 'You don\'t have it and the situation grows more perilous. Pay the Price.'
+		}
+	},
+	{
+		id: 'locate-objective',
+		name: 'Locate Your Objective',
+		category: 'delve',
+		text: 'When your exploration of a site comes to an end, roll the challenge dice against your progress.',
+		isProgressMove: true,
+		outcomes: {
+			strong_hit: 'You locate your objective and the situation favors you. Choose one: Make another move now (not a progress move) and add +1, or take +1 momentum.',
+			weak_hit: 'You locate your objective but face an unforeseen hazard or complication. Envision what you discover (Ask the Oracle if unsure).',
+			miss: 'Your objective falls out of reach, is lost, or you realize your true objective lies elsewhere. If you continue to explore, clear all but one filled progress and raise the site\'s rank by one (if not already epic).'
+		}
+	},
+	{
+		id: 'escape-the-depths',
+		name: 'Escape the Depths',
+		category: 'delve',
+		text: 'When you flee or withdraw from a site, envision your escape. Consider your approach: With haste: roll +edge. With courage or determination: roll +heart. With combat or strength: roll +iron. With stealth or trickery: roll +shadow. With knowledge or perception: roll +wits.',
+		stats: ['edge', 'heart', 'iron', 'shadow', 'wits'],
+		outcomes: {
+			strong_hit: 'You make your way safely out of the site. Take +1 momentum.',
+			weak_hit: 'You find your way out, but this place exacts its price. Choose one: You are delayed or disorientated — suffer -1 momentum. You are tired or hurt — suffer -1 health. You are dispirited — suffer -1 spirit. You sacrifice resources — suffer -1 supply.',
+			miss: 'A dire threat or obstacle stands in your way. Reveal a Danger. If you survive, you may attempt to escape again.'
+		}
 	}
 ];
 
@@ -452,7 +540,8 @@ export const MOVE_CATEGORIES: { id: string; name: string; category: Move['catego
 	{ id: 'combat', name: 'Combat', category: 'combat' },
 	{ id: 'suffer', name: 'Suffer', category: 'suffer' },
 	{ id: 'quest', name: 'Quest', category: 'quest' },
-	{ id: 'fate', name: 'Fate', category: 'fate' }
+	{ id: 'fate', name: 'Fate', category: 'fate' },
+	{ id: 'delve', name: 'Delve', category: 'delve' }
 ];
 
 export function getMovesByCategory(category: Move['category']): Move[] {

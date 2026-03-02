@@ -702,6 +702,110 @@ export const ORACLE_TABLES: OracleTable[] = [
 			{ min: 91, max: 94, result: 'Use an ability or asset' },
 			{ min: 95, max: 100, result: 'Take a desperate action' }
 		]
+	},
+
+	// ══════════════════════════════════
+	// DELVE ORACLES
+	// ══════════════════════════════════
+	{
+		id: 'delve-site-name',
+		name: 'Site Name',
+		category: 'Delve',
+		d: 100,
+		rows: [
+			{ min: 1, max: 4, result: 'Darkvault' }, { min: 5, max: 8, result: 'Shadowdeep' },
+			{ min: 9, max: 12, result: 'Bonecrypt' }, { min: 13, max: 16, result: 'Grimhold' },
+			{ min: 17, max: 20, result: 'Hollowreach' }, { min: 21, max: 24, result: 'Stonegrave' },
+			{ min: 25, max: 28, result: 'Ashfall' }, { min: 29, max: 32, result: 'Blightmaw' },
+			{ min: 33, max: 36, result: 'Ironmaw' }, { min: 37, max: 40, result: 'Wraithden' },
+			{ min: 41, max: 44, result: 'Rotwood' }, { min: 45, max: 48, result: 'Gloomspire' },
+			{ min: 49, max: 52, result: 'Frostbarrow' }, { min: 53, max: 56, result: 'Bloodrift' },
+			{ min: 57, max: 60, result: 'Doomdelve' }, { min: 61, max: 64, result: 'Thornwatch' },
+			{ min: 65, max: 68, result: 'Shadefall' }, { min: 69, max: 72, result: 'Embervault' },
+			{ min: 73, max: 76, result: 'Wyrmhole' }, { min: 77, max: 80, result: 'Dustveil' },
+			{ min: 81, max: 84, result: 'Corpsemire' }, { min: 85, max: 88, result: 'Nightkeep' },
+			{ min: 89, max: 92, result: 'Ruinspire' }, { min: 93, max: 96, result: 'Dreadvault' },
+			{ min: 97, max: 100, result: 'Gravemaw' }
+		]
+	},
+	{
+		id: 'delve-feature',
+		name: 'Delve Feature',
+		category: 'Delve',
+		d: 100,
+		rows: [
+			{ min: 1, max: 4, result: 'Carved passages' },
+			{ min: 5, max: 8, result: 'Collapsed section' },
+			{ min: 9, max: 12, result: 'Flooded chamber' },
+			{ min: 13, max: 16, result: 'Fungi or moss growth' },
+			{ min: 17, max: 20, result: 'Ancient mechanism' },
+			{ min: 21, max: 24, result: 'Crumbling architecture' },
+			{ min: 25, max: 28, result: 'Eerie markings or symbols' },
+			{ min: 29, max: 32, result: 'Evidence of habitation' },
+			{ min: 33, max: 36, result: 'Foul stench' },
+			{ min: 37, max: 40, result: 'Abandoned supplies or gear' },
+			{ min: 41, max: 44, result: 'Bodies or bones' },
+			{ min: 45, max: 48, result: 'Chasm or pit' },
+			{ min: 49, max: 52, result: 'Crossroads or junction' },
+			{ min: 53, max: 56, result: 'Narrow squeeze' },
+			{ min: 57, max: 60, result: 'Natural spring or pool' },
+			{ min: 61, max: 64, result: 'Open cavern' },
+			{ min: 65, max: 68, result: 'Sealed door or gate' },
+			{ min: 69, max: 72, result: 'Stairs or ramp' },
+			{ min: 73, max: 76, result: 'Statues or monuments' },
+			{ min: 77, max: 80, result: 'Trap or hazard' },
+			{ min: 81, max: 84, result: 'Unusual architecture' },
+			{ min: 85, max: 88, result: 'Signs of a battle' },
+			{ min: 89, max: 92, result: 'Mystical energy' },
+			{ min: 93, max: 96, result: 'Something unexpected or out of place' },
+			{ min: 97, max: 100, result: 'Roll twice' }
+		]
+	},
+	{
+		id: 'delve-danger',
+		name: 'Delve Danger',
+		category: 'Delve',
+		d: 100,
+		rows: [
+			{ min: 1, max: 5, result: 'Denizen attacks without warning' },
+			{ min: 6, max: 10, result: 'Denizen strikes from concealment' },
+			{ min: 11, max: 15, result: 'Denizen appears in overwhelming numbers' },
+			{ min: 16, max: 20, result: 'Denizen drives you into a trap' },
+			{ min: 21, max: 25, result: 'Passage collapses or is blocked' },
+			{ min: 26, max: 30, result: 'Environment turns hostile' },
+			{ min: 31, max: 35, result: 'Disorienting — lose your way' },
+			{ min: 36, max: 40, result: 'Discovery undermines your quest' },
+			{ min: 41, max: 45, result: 'Equipment is damaged or lost' },
+			{ min: 46, max: 50, result: 'Creatures lurk in the shadows' },
+			{ min: 51, max: 55, result: 'Trap is triggered' },
+			{ min: 56, max: 60, result: 'The ground gives way' },
+			{ min: 61, max: 65, result: 'A barrier blocks your path' },
+			{ min: 66, max: 70, result: 'An alarm is triggered' },
+			{ min: 71, max: 75, result: 'Haunting vision or manifestation' },
+			{ min: 76, max: 80, result: 'A resource is depleted' },
+			{ min: 81, max: 85, result: 'You face a moral dilemma' },
+			{ min: 86, max: 90, result: 'Something is not what it seems' },
+			{ min: 91, max: 95, result: 'A dire threat is revealed' },
+			{ min: 96, max: 100, result: 'Roll twice' }
+		]
+	},
+	{
+		id: 'delve-opportunity',
+		name: 'Delve Opportunity',
+		category: 'Delve',
+		d: 100,
+		rows: [
+			{ min: 1, max: 10, result: 'The terrain favors you, or you find a shortcut' },
+			{ min: 11, max: 20, result: 'An aspect of the history or nature of this place is revealed' },
+			{ min: 21, max: 30, result: 'You find useful resources' },
+			{ min: 31, max: 40, result: 'A denizen offers unexpected help' },
+			{ min: 41, max: 50, result: 'You find evidence of a prior explorer' },
+			{ min: 51, max: 60, result: 'You locate a secure area' },
+			{ min: 61, max: 70, result: 'A clue leads you to your objective' },
+			{ min: 71, max: 80, result: 'You get the drop on a denizen' },
+			{ min: 81, max: 90, result: 'An aspect of the site works in your favor' },
+			{ min: 91, max: 100, result: 'You find an item of value' }
+		]
 	}
 ];
 

@@ -107,8 +107,52 @@ export interface ProgressTrack {
 	completed: boolean;
 }
 
+// ── NPCs ──
+export type Kin = 'Ironlander' | 'Elf' | 'Giant' | 'Varou' | 'Troll';
+
+export interface NPC {
+	id: string;
+	name: string;
+	kin: Kin;
+	role: string;
+	descriptor: string;
+	goal: string;
+	disposition: string;
+	isBonded: boolean;
+	notes: string;
+	locationId?: string;
+}
+
+// ── Locations ──
+export interface Location {
+	id: string;
+	name: string;
+	region: string;
+	type: string;
+	descriptor: string;
+	trouble: string;
+	notes: string;
+}
+
+// ── Delve Sites ──
+export type SiteTheme = 'Ancient' | 'Corrupted' | 'Fortified' | 'Hallowed' | 'Haunted' | 'Infested' | 'Ravaged' | 'Wild';
+export type SiteDomain = 'Barrow' | 'Cavern' | 'Frozen Cavern' | 'Icereach' | 'Mine' | 'Pass' | 'Ruin' | 'Sea Cave' | 'Shadowfen' | 'Stronghold' | 'Tanglewood' | 'Underkeep';
+
+export interface DelveSite {
+	id: string;
+	name: string;
+	rank: TrackRank;
+	ticks: number;
+	completed: boolean;
+	objective: string;
+	theme: string;
+	domain: string;
+	notes: string;
+	denizens: string[];
+}
+
 // ── Moves ──
-export type MoveCategory = 'adventure' | 'relationship' | 'combat' | 'suffer' | 'quest' | 'fate';
+export type MoveCategory = 'adventure' | 'relationship' | 'combat' | 'suffer' | 'quest' | 'fate' | 'delve';
 
 export interface MoveOutcomeText {
 	strong_hit: string;
@@ -198,6 +242,9 @@ export interface Campaign {
 	session: number;
 	createdAt: number;
 	updatedAt: number;
+	npcs?: NPC[];
+	locations?: Location[];
+	sites?: DelveSite[];
 }
 
 // ── Momentum Helpers ──
