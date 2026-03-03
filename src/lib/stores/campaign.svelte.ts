@@ -131,11 +131,11 @@ function createCampaignStore() {
 			campaignId = data.id;
 			campaignName = data.name;
 			characterStore.loadFromJSON(data.character);
-			tracks = data.tracks;
-			journal = data.journal;
-			rollHistory = data.rollHistory || [];
-			session = data.session;
-			createdAt = data.createdAt;
+			tracks = data.tracks ?? [];
+			journal = data.journal ?? [];
+			rollHistory = data.rollHistory ?? [];
+			session = data.session ?? 1;
+			createdAt = data.createdAt ?? Date.now();
 			updatedAt = data.updatedAt ?? 0;
 			npcs = data.npcs ?? [];
 			locations = data.locations ?? [];

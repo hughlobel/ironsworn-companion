@@ -51,11 +51,14 @@ export function importCampaignJSON(json: string): boolean {
 
 export async function saveToMcp(): Promise<void> {
 	try {
-		await fetch('/api/campaign', {
+		const res = await fetch('/api/campaign', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: exportCampaignJSON()
 		});
+		if (!res.ok) {
+			console.error('[MCP sync] POST failed:', res.status, await res.text().catch(() => ''));
+		}
 	} catch {
 		// MCP server not running — degrade gracefully
 	}

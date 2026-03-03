@@ -135,8 +135,18 @@ function createCharacterStore() {
 		},
 
 		loadFromJSON(data: Character) {
-			character = data;
-			initialized = true;
+			character = {
+				name: data.name ?? '',
+				experience: data.experience ?? 0,
+				experienceSpent: data.experienceSpent ?? 0,
+				stats: data.stats ?? defaultStats(),
+				meters: data.meters ?? defaultMeters(),
+				debilities: data.debilities ?? defaultDebilities(),
+				bonds: data.bonds ?? 0,
+				assets: data.assets ?? [],
+				vows: data.vows ?? []
+			};
+			initialized = !!data.name;
 		},
 
 		reset() {

@@ -57,10 +57,14 @@ export class CampaignState {
 				const raw = readFileSync(STATE_FILE, 'utf-8');
 				const data = JSON.parse(raw) as Campaign;
 				// Ensure arrays exist (backwards compat)
+				data.tracks = data.tracks ?? [];
+				data.journal = data.journal ?? [];
 				data.npcs = data.npcs ?? [];
 				data.locations = data.locations ?? [];
 				data.sites = data.sites ?? [];
 				data.rollHistory = data.rollHistory ?? [];
+				data.session = data.session ?? 1;
+				data.createdAt = data.createdAt ?? Date.now();
 				return data;
 			}
 		} catch {

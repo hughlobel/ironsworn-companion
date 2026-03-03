@@ -36,15 +36,21 @@
 		es.onmessage = (event) => {
 			try {
 				const data = JSON.parse(event.data);
-				if (data?.id) {
-					if ((data.updatedAt ?? 0) >= campaignStore.updatedAt) {
-						// MCP is same age or newer — accept it
-						fromMcpSync = true;
-						campaignStore.loadCampaign(data);
-					} else {
-						// Local data is newer — push local state to MCP
-						saveToMcp();
-					}
+				// Check that MCP data is complete — reject bare/test campaigns
+				const mcpComplete = data?.id && data.character?.stats && data.character?.meters
+					&& Array.isArray(data.tracks) && Array.isArray(data.journal);
+				if (!mcpComplete) {
+					// MCP has incomplete data — push our good local state to fix it
+					saveToMcp();
+					return;
+				}
+				if ((data.updatedAt ?? 0) >= campaignStore.updatedAt) {
+					// MCP is same age or newer — accept it
+					fromMcpSync = true;
+					campaignStore.loadCampaign(data);
+				} else {
+					// Local data is newer — push local state to MCP
+					saveToMcp();
 				}
 			} catch {
 				// Ignore parse errors
@@ -64,7 +70,7 @@
 		// Touch reactive state to track it
 		const _ = JSON.stringify(characterStore.character);
 		const __ = JSON.stringify(campaignStore.tracks);
-		const ___ = campaignStore.journal.length;
+		const ___ = JSON.stringify(campaignStore.journal);
 		const ____ = JSON.stringify(campaignStore.npcs);
 		const _____ = JSON.stringify(campaignStore.locations);
 		const ______ = JSON.stringify(campaignStore.sites);
