@@ -15,10 +15,21 @@
 	let loaded = $state(false);
 	let sidebarCollapsed = $state(false);
 
+	function handleGlobalKeydown(e: KeyboardEvent) {
+		const target = e.target as HTMLElement;
+		if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
+		if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+			e.preventDefault();
+			referencePanelStore.toggle();
+		}
+	}
+
 	onMount(() => {
 		loadFromLocalStorage();
 		loaded = true;
 		rulebookStore.init();
+		document.addEventListener('keydown', handleGlobalKeydown);
+		return () => document.removeEventListener('keydown', handleGlobalKeydown);
 	});
 
 	// Auto-save on changes
@@ -81,6 +92,18 @@
 					{#if !sidebarCollapsed}{item.label}{/if}
 				</a>
 			{/each}
+		</div>
+
+		<div class="sidebar-rulebook-toggle">
+			<button
+				class="rulebook-toggle-btn"
+				class:active={referencePanelStore.isOpen}
+				onclick={() => referencePanelStore.toggle()}
+				title={sidebarCollapsed ? 'Toggle Rulebook (?)' : ''}
+			>
+				<span>📖</span>
+				{#if !sidebarCollapsed}<span class="rulebook-toggle-label">Rulebook <kbd>?</kbd></span>{/if}
+			</button>
 		</div>
 
 		{#if characterStore.initialized}

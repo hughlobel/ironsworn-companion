@@ -199,6 +199,65 @@ html, body {
 	margin-bottom: var(--space-sm);
 }
 
+/* ── Rulebook Toggle ── */
+.sidebar-rulebook-toggle {
+	padding: var(--space-xs) var(--space-sm);
+}
+
+.rulebook-toggle-btn {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+	width: 100%;
+	padding: var(--space-sm) var(--space-md);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	background: var(--bg-surface);
+	color: var(--text-secondary);
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.rulebook-toggle-btn:hover {
+	background: var(--bg-raised);
+	color: var(--text-primary);
+}
+
+.rulebook-toggle-btn.active {
+	background: var(--accent-glow);
+	color: var(--accent);
+	border-color: var(--accent);
+}
+
+.rulebook-toggle-label {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+	flex: 1;
+}
+
+.rulebook-toggle-label kbd {
+	margin-left: auto;
+	font-size: 10px;
+	padding: 1px 5px;
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	background: var(--bg-base);
+	color: var(--text-muted);
+	font-family: inherit;
+}
+
+.sidebar.collapsed .sidebar-rulebook-toggle {
+	padding: var(--space-xs);
+}
+
+.sidebar.collapsed .rulebook-toggle-btn {
+	justify-content: center;
+	padding: var(--space-sm);
+}
+
 /* ── Quick Stats (sidebar meters) ── */
 .quick-stats {
 	padding: var(--space-md) var(--space-lg);

@@ -79,6 +79,15 @@ function createReferencePanelStore() {
 			isFullscreen = false;
 		},
 
+		toggle() {
+			if (isOpen) {
+				isOpen = false;
+				isFullscreen = false;
+			} else {
+				this.openLastOrFirst();
+			}
+		},
+
 		toggleFullscreen() {
 			isFullscreen = !isFullscreen;
 		},
