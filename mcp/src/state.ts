@@ -125,6 +125,9 @@ export class CampaignState {
 
 	importCampaign(json: string): void {
 		const data = JSON.parse(json) as Campaign;
+		if (!data.id || !data.character || !data.name) {
+			throw new Error('Invalid campaign data');
+		}
 		data.npcs = data.npcs ?? [];
 		data.locations = data.locations ?? [];
 		data.sites = data.sites ?? [];

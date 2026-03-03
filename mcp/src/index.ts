@@ -33,7 +33,7 @@ const rulebookData = loadJson<{ sections: RulebookSection[] }>('rulebook-index.j
 
 // Init state
 const state = new CampaignState();
-startHttpServer(() => state.exportCampaign());
+startHttpServer(() => state.exportCampaign(), (json) => state.importCampaign(json));
 state.onSave(() => notifySseClients(state.exportCampaign()));
 
 // Create server

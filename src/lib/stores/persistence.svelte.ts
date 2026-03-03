@@ -49,6 +49,18 @@ export function importCampaignJSON(json: string): boolean {
 	}
 }
 
+export async function saveToMcp(): Promise<void> {
+	try {
+		await fetch('/api/campaign', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: exportCampaignJSON()
+		});
+	} catch {
+		// MCP server not running — degrade gracefully
+	}
+}
+
 export function downloadCampaignFile() {
 	const json = exportCampaignJSON();
 	const blob = new Blob([json], { type: 'application/json' });

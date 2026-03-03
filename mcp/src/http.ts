@@ -19,11 +19,25 @@ export function notifySseClients(campaignJson: string): void {
 	}
 }
 
-function handleRequest(req: IncomingMessage, res: ServerResponse, getCampaignJson: () => string): void {
+function readBody(req: IncomingMessage): Promise<string> {
+	return new Promise((resolve, reject) => {
+		let body = '';
+		req.on('data', chunk => { body += chunk; });
+		req.on('end', () => resolve(body));
+		req.on('error', reject);
+	});
+}
+
+function handleRequest(
+	req: IncomingMessage,
+	res: ServerResponse,
+	getCampaignJson: () => string,
+	importCampaign: (json: string) => void
+): void {
 	const url = (req.url ?? '/').split('?')[0];
 
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
 	if (req.method === 'OPTIONS') {
@@ -45,8 +59,24 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, getCampaignJso
 		return;
 	}
 
-	// Campaign JSON for manual fetch
+	// Campaign JSON — GET to fetch, POST to update from web app
 	if (url === '/api/campaign') {
+		if (req.method === 'POST') {
+			readBody(req).then(body => {
+				try {
+					importCampaign(body);
+					res.writeHead(200, { 'Content-Type': 'application/json' });
+					res.end('{"ok":true}');
+				} catch (err) {
+					res.writeHead(400, { 'Content-Type': 'application/json' });
+					res.end(JSON.stringify({ ok: false, error: String(err) }));
+				}
+			}).catch(() => {
+				res.writeHead(500);
+				res.end('{"ok":false}');
+			});
+			return;
+		}
 		res.writeHead(200, { 'Content-Type': 'application/json' });
 		res.end(getCampaignJson());
 		return;
@@ -56,8 +86,12 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, getCampaignJso
 	res.end('Not found');
 }
 
-export function startHttpServer(getCampaignJson: () => string, port = 7474): void {
-	const server = createServer((req, res) => handleRequest(req, res, getCampaignJson));
+export function startHttpServer(
+	getCampaignJson: () => string,
+	importCampaign: (json: string) => void,
+	port = 7474
+): void {
+	const server = createServer((req, res) => handleRequest(req, res, getCampaignJson, importCampaign));
 	server.listen(port, '127.0.0.1', () => {
 		process.stderr.write(`[ironsworn] Companion: http://localhost:${port}\n`);
 	});

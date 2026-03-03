@@ -9,6 +9,7 @@ function createCampaignStore() {
 	let campaignId = $state(crypto.randomUUID());
 	let campaignName = $state('New Campaign');
 	let createdAt = $state(Date.now());
+	let updatedAt = $state(0);
 	let npcs = $state<NPC[]>([]);
 	let locations = $state<Location[]>([]);
 	let sites = $state<DelveSite[]>([]);
@@ -25,6 +26,8 @@ function createCampaignStore() {
 		get sites() { return sites; },
 		get activeSites() { return sites.filter(s => !s.completed); },
 		get completedSites() { return sites.filter(s => s.completed); },
+		get updatedAt() { return updatedAt; },
+		stampUpdatedAt() { updatedAt = Date.now(); },
 
 		setCampaignName(name: string) { campaignName = name; },
 		newSession() { session++; },
@@ -133,6 +136,7 @@ function createCampaignStore() {
 			rollHistory = data.rollHistory || [];
 			session = data.session;
 			createdAt = data.createdAt;
+			updatedAt = data.updatedAt ?? 0;
 			npcs = data.npcs ?? [];
 			locations = data.locations ?? [];
 			sites = data.sites ?? [];

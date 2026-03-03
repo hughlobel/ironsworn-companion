@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import { characterStore } from '$lib/stores/character.svelte';
 	import { campaignStore } from '$lib/stores/campaign.svelte';
-	import { loadFromLocalStorage, saveToLocalStorage } from '$lib/stores/persistence.svelte';
+	import { loadFromLocalStorage, saveToLocalStorage, saveToMcp } from '$lib/stores/persistence.svelte';
 	import { rulebookStore } from '$lib/stores/rulebook.svelte';
 	import { referencePanelStore } from '$lib/stores/reference-panel.svelte';
 	import RulebookPanel from '$lib/components/reference/RulebookPanel.svelte';
@@ -14,6 +14,7 @@
 
 	let loaded = $state(false);
 	let sidebarCollapsed = $state(false);
+	let fromMcpSync = false; // plain var — not reactive, used to break POST↔SSE loop
 
 	function handleGlobalKeydown(e: KeyboardEvent) {
 		const target = e.target as HTMLElement;
@@ -36,7 +37,14 @@
 			try {
 				const data = JSON.parse(event.data);
 				if (data?.id) {
-					campaignStore.loadCampaign(data);
+					if ((data.updatedAt ?? 0) >= campaignStore.updatedAt) {
+						// MCP is same age or newer — accept it
+						fromMcpSync = true;
+						campaignStore.loadCampaign(data);
+					} else {
+						// Local data is newer — push local state to MCP
+						saveToMcp();
+					}
 				}
 			} catch {
 				// Ignore parse errors
@@ -60,8 +68,16 @@
 		const ____ = JSON.stringify(campaignStore.npcs);
 		const _____ = JSON.stringify(campaignStore.locations);
 		const ______ = JSON.stringify(campaignStore.sites);
-		// Debounce save
-		const timer = setTimeout(() => saveToLocalStorage(), 500);
+		// Debounce save — skip MCP POST when the change came from MCP itself
+		const postToMcp = !fromMcpSync;
+		fromMcpSync = false;
+		const timer = setTimeout(() => {
+			saveToLocalStorage();
+			if (postToMcp) {
+				campaignStore.stampUpdatedAt();
+				saveToMcp();
+			}
+		}, 500);
 		return () => clearTimeout(timer);
 	});
 
