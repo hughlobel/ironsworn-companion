@@ -29,7 +29,25 @@
 		loaded = true;
 		rulebookStore.init();
 		document.addEventListener('keydown', handleGlobalKeydown);
-		return () => document.removeEventListener('keydown', handleGlobalKeydown);
+
+		// Connect to MCP real-time sync stream
+		const es = new EventSource('/api/sync/stream');
+		es.onmessage = (event) => {
+			try {
+				const data = JSON.parse(event.data);
+				if (data?.id) {
+					campaignStore.loadCampaign(data);
+				}
+			} catch {
+				// Ignore parse errors
+			}
+		};
+		es.onerror = () => es.close(); // Gracefully degrade if endpoint unavailable
+
+		return () => {
+			document.removeEventListener('keydown', handleGlobalKeydown);
+			es.close();
+		};
 	});
 
 	// Auto-save on changes
@@ -56,7 +74,7 @@
 		{ href: `${base}/world`, label: 'World', icon: '🌍' },
 		{ href: `${base}/delves`, label: 'Delves', icon: '🕳' },
 		{ href: `${base}/journal`, label: 'Journal', icon: '📖' },
-		{ href: `${base}/reference`, label: 'Rulebook', icon: '📚' },
+		{ href: `${base}/reference`, label: 'Contents', icon: '📚' },
 	];
 
 	function isActive(href: string, pathname: string) {

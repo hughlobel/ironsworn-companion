@@ -79,8 +79,9 @@
 {#if !characterStore.initialized}
 	<div class="empty-state card" style="max-width: 400px; margin: 80px auto; text-align: center; padding: var(--space-2xl);">
 		<h2>No Character</h2>
-		<p class="text-secondary">Create a character to begin.</p>
+		<p class="text-secondary">Create a character to begin, or import an existing campaign.</p>
 		<a href="{base}/character/create" class="btn btn-primary" style="text-decoration: none;">Create Character</a>
+		<button class="btn" onclick={() => uploadCampaignFile()}>Import JSON</button>
 	</div>
 {:else}
 	<div class="character-sheet">
