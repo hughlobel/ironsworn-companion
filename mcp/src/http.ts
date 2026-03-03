@@ -1,27 +1,5 @@
 import { createServer } from 'http';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { readFileSync, existsSync, statSync } from 'fs';
-import { join, extname } from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const STATIC_DIR = join(__dirname, '..', '..', 'build');
-
-const MIME: Record<string, string> = {
-	'.html': 'text/html; charset=utf-8',
-	'.js': 'application/javascript',
-	'.css': 'text/css',
-	'.svg': 'image/svg+xml',
-	'.json': 'application/json',
-	'.png': 'image/png',
-	'.jpg': 'image/jpeg',
-	'.ico': 'image/x-icon',
-	'.woff2': 'font/woff2',
-	'.woff': 'font/woff',
-	'.ttf': 'font/ttf',
-	'.map': 'application/json',
-};
 
 const sseClients = new Set<ServerResponse>();
 
@@ -39,15 +17,6 @@ export function notifySseClients(campaignJson: string): void {
 			sseClients.delete(client);
 		}
 	}
-}
-
-function serveFile(filePath: string, res: ServerResponse): boolean {
-	if (!existsSync(filePath)) return false;
-	if (!statSync(filePath).isFile()) return false;
-	const mime = MIME[extname(filePath)] ?? 'application/octet-stream';
-	res.writeHead(200, { 'Content-Type': mime });
-	res.end(readFileSync(filePath));
-	return true;
 }
 
 function handleRequest(req: IncomingMessage, res: ServerResponse, getCampaignJson: () => string): void {
@@ -81,12 +50,6 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, getCampaignJso
 		res.writeHead(200, { 'Content-Type': 'application/json' });
 		res.end(getCampaignJson());
 		return;
-	}
-
-	// Static file serving with SPA fallback
-	if (existsSync(STATIC_DIR)) {
-		if (serveFile(join(STATIC_DIR, url), res)) return;
-		if (serveFile(join(STATIC_DIR, 'index.html'), res)) return;
 	}
 
 	res.writeHead(404);
