@@ -5,5 +5,10 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	optimizeDeps: {
 		include: ['pdfjs-dist']
+	},
+	server: {
+		proxy: {
+			'/api': 'http://localhost:7474'
+		}
 	}
 });

@@ -1,0 +1,620 @@
+{
+	"moves": [
+		{
+			"id": "face-danger",
+			"name": "Face Danger",
+			"category": "adventure",
+			"text": "When you attempt something risky or react to an imminent threat, envision your action and roll. If you act with speed, agility, or precision: roll +edge. With charm, loyalty, or courage: roll +heart. With aggressive action, forceful defense, or endurance: roll +iron. With deception, stealth, or trickery: roll +shadow. With expertise, insight, or observation: roll +wits.",
+			"stats": [
+				"edge",
+				"heart",
+				"iron",
+				"shadow",
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You are successful. Take +1 momentum.",
+				"weak_hit": "You succeed, but face a troublesome cost. Choose one: you are delayed, lose advantage, or face a new danger — Suffer -1 momentum.",
+				"miss": "You fail, or your progress is undermined by a dramatic and costly turn of events. Pay the Price."
+			}
+		},
+		{
+			"id": "secure-advantage",
+			"name": "Secure an Advantage",
+			"category": "adventure",
+			"text": "When you assess a situation, make preparations, or attempt to gain leverage, envision your action and roll. If you act with speed, agility, or precision: roll +edge. With charm, loyalty, or courage: roll +heart. With aggressive action, forceful defense, or endurance: roll +iron. With deception, stealth, or trickery: roll +shadow. With expertise, insight, or observation: roll +wits.",
+			"stats": [
+				"edge",
+				"heart",
+				"iron",
+				"shadow",
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You gain advantage. Choose one: Take +2 momentum, or add +1 on your next move (any move, one time only).",
+				"weak_hit": "Your advantage is short-lived. Take +1 momentum.",
+				"miss": "You fail or your assumptions betray you. Pay the Price."
+			}
+		},
+		{
+			"id": "gather-information",
+			"name": "Gather Information",
+			"category": "adventure",
+			"text": "When you search an area, ask questions, conduct an investigation, or follow a track, roll +wits. If you act within a community or ask questions of a friend or connection, add +1.",
+			"stats": [
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You discover something helpful and specific. The path you must follow or action you must take to make progress is made clear. Envision what you learn (Ask the Oracle if unsure), and take +2 momentum.",
+				"weak_hit": "The information complicates your quest or introduces a new danger. Envision what you discover (Ask the Oracle if unsure), and take +1 momentum.",
+				"miss": "Your investigation unearths a dire threat or reveals an unwelcome truth that undermines your quest. Pay the Price."
+			}
+		},
+		{
+			"id": "heal",
+			"name": "Heal",
+			"category": "adventure",
+			"text": "When you treat an injury or ailment, roll +wits. If you are mending your own wounds, roll +wits or +iron, whichever is lower.",
+			"stats": [
+				"wits",
+				"iron"
+			],
+			"outcomes": {
+				"strong_hit": "Your care is helpful. If you (or the ally under your care) have the wounded condition, you may clear it. Then, take or give up to +2 health.",
+				"weak_hit": "As above, but you must suffer -1 supply or -1 momentum (your choice).",
+				"miss": "Your aid is ineffective. Pay the Price."
+			}
+		},
+		{
+			"id": "resupply",
+			"name": "Resupply",
+			"category": "adventure",
+			"text": "When you hunt, forage, or scavenge, roll +wits.",
+			"stats": [
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You bolster your resources. Take +2 supply.",
+				"weak_hit": "Take up to +2 supply, but suffer -1 momentum for each.",
+				"miss": "You find nothing helpful. Pay the Price."
+			}
+		},
+		{
+			"id": "make-camp",
+			"name": "Make Camp",
+			"category": "adventure",
+			"text": "When you rest and recover for several hours in the wild, roll +supply.",
+			"stats": [
+				"supply"
+			],
+			"outcomes": {
+				"strong_hit": "You and your allies may each choose two: Recuperate (take +1 health for you and any companions), Relax (take +1 spirit), Focus (take +1 momentum), Prepare (when you break camp, add +1 on your next move).",
+				"weak_hit": "You and your allies may each choose one from the list above.",
+				"miss": "You take no comfort. Pay the Price."
+			}
+		},
+		{
+			"id": "undertake-journey",
+			"name": "Undertake a Journey",
+			"category": "adventure",
+			"text": "When you travel across hazardous or unfamiliar lands, set the rank of your journey based on the distance and peril. Then, for each segment of your journey, roll +wits. If you are setting off from a community with which you share a bond, add +1.",
+			"stats": [
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You reach a waypoint. If the waypoint is unknown to you, envision it (Ask the Oracle if unsure). Then, choose one: You make good use of your resources: Mark progress. You move at speed: Mark progress and take +1 momentum, but suffer -1 supply.",
+				"weak_hit": "You reach a waypoint and mark progress, but suffer -1 supply.",
+				"miss": "You are waylaid by a perilous event. Pay the Price."
+			}
+		},
+		{
+			"id": "reach-destination",
+			"name": "Reach Your Destination",
+			"category": "adventure",
+			"text": "When your journey is complete, roll the challenge dice against your progress (do not roll your action die).",
+			"isProgressMove": true,
+			"outcomes": {
+				"strong_hit": "The situation at your destination favors you. Choose one: Make another move now (not a progress move) and add +1, or take +1 momentum.",
+				"weak_hit": "You arrive but face an unforeseen hazard or complication. Envision what you find (Ask the Oracle if unsure).",
+				"miss": "You have gone hopelessly astray, your objective is lost to you, or you were led into a trap. Pay the Price."
+			}
+		},
+		{
+			"id": "compel",
+			"name": "Compel",
+			"category": "relationship",
+			"text": "When you attempt to persuade someone to do something, envision your approach. If you charm, pacify, barter, or convince: roll +heart (add +1 if you share a bond). If you threaten or incite: roll +iron. If you lie or swindle: roll +shadow.",
+			"stats": [
+				"heart",
+				"iron",
+				"shadow"
+			],
+			"outcomes": {
+				"strong_hit": "They'll do what you want or share what they know. Take +1 momentum. If you use this exchange to Gather Information, make that move now and add +1.",
+				"weak_hit": "As above, but they ask something of you in return. Envision what they want (Ask the Oracle if unsure).",
+				"miss": "They refuse or make a demand which costs you greatly. Pay the Price."
+			}
+		},
+		{
+			"id": "sojourn",
+			"name": "Sojourn",
+			"category": "relationship",
+			"text": "When you spend time in a community seeking assistance, roll +heart. If you share a bond, add +1.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "You and your allies may each choose two from the list: Clear a condition, Recuperate (take +2 health), Consort (take +2 spirit), Provision (take +2 supply), Plan (take +2 momentum).",
+				"weak_hit": "You and your allies may each choose one from the list above.",
+				"miss": "You find no comfort, and the situation worsens. Pay the Price."
+			}
+		},
+		{
+			"id": "draw-circle",
+			"name": "Draw the Circle",
+			"category": "relationship",
+			"text": "When you challenge someone to a formal duel, or accept a challenge, roll +heart. If you share a bond with this community, add +1.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "Take +1 momentum. You may also choose up to three boasts and take +1 momentum for each.",
+				"weak_hit": "You may choose one boast and take +1 momentum.",
+				"miss": "You begin the duel at a disadvantage. Your foe has initiative. Pay the Price."
+			}
+		},
+		{
+			"id": "forge-bond",
+			"name": "Forge a Bond",
+			"category": "relationship",
+			"text": "When you spend significant time with a person or community, stand together to face hardships, or make sacrifices for their cause, you can attempt to create a bond. When you do, roll +heart.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "Make note of the bond, mark a tick on your bond progress track, and choose one: Take +1 spirit, or take +2 momentum.",
+				"weak_hit": "They ask something more of you first. Envision what it is (Ask the Oracle if unsure), do it (or Swear an Iron Vow), and mark the bond.",
+				"miss": "They reject you. Pay the Price."
+			}
+		},
+		{
+			"id": "test-bond",
+			"name": "Test Your Bond",
+			"category": "relationship",
+			"text": "When your bond is tested through conflict, betrayal, or circumstance, roll +heart.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "This test has strengthened your bond. Choose one: Take +1 spirit, or take +2 momentum.",
+				"weak_hit": "Your bond is fragile and you must prove your loyalty. Envision what they ask of you (Ask the Oracle if unsure), and do it (or Swear an Iron Vow). If you refuse or fail, clear the bond and Pay the Price.",
+				"miss": "Your bond is broken. Clear the bond and Pay the Price."
+			}
+		},
+		{
+			"id": "aid-ally",
+			"name": "Aid Your Ally",
+			"category": "relationship",
+			"text": "When you Secure an Advantage in direct support of an ally, and score a hit, they (instead of you) can take the benefits of the move. If you are in combat and score a strong hit, you also take +1 momentum.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "Your ally takes the benefits of Secure an Advantage. In combat, you also take +1 momentum.",
+				"weak_hit": "Your ally takes the benefits of Secure an Advantage.",
+				"miss": "See Secure an Advantage miss outcome."
+			}
+		},
+		{
+			"id": "write-epilogue",
+			"name": "Write Your Epilogue",
+			"category": "relationship",
+			"text": "When you retire from your life as Ironsworn, envision two things: What your greatest challenge was, and what you seek now. Then, roll the challenge dice against your bonds progress.",
+			"isProgressMove": true,
+			"outcomes": {
+				"strong_hit": "Things are good. Envision your epilogue and your life ahead.",
+				"weak_hit": "Your life takes an unexpected turn, but you find a measure of peace. Envision your epilogue.",
+				"miss": "Your world is in turmoil, or you find yourself at odds with old allies. Envision your epilogue."
+			}
+		},
+		{
+			"id": "enter-fray",
+			"name": "Enter the Fray",
+			"category": "combat",
+			"text": "When you enter into combat, set the rank of each of your foes. Then, roll to determine who is in control. If you are facing off against your foe: roll +heart. If you are moving into position against an unaware foe, or are stealthily or deceitfully setting an ambush: roll +shadow. If you are ambushed: roll +wits.",
+			"stats": [
+				"heart",
+				"shadow",
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "Take +2 momentum. You have initiative.",
+				"weak_hit": "Choose one: Bolster your position: Take +2 momentum. Prepare to act: Take initiative.",
+				"miss": "Combat begins with you at a disadvantage. Pay the Price. Your foe has initiative."
+			}
+		},
+		{
+			"id": "strike",
+			"name": "Strike",
+			"category": "combat",
+			"text": "When you have initiative and attack in close quarters, roll +iron. When you have initiative and attack at range, roll +edge.",
+			"stats": [
+				"iron",
+				"edge"
+			],
+			"outcomes": {
+				"strong_hit": "Inflict +1 harm. You retain initiative.",
+				"weak_hit": "Inflict your harm and lose initiative.",
+				"miss": "Your attack fails and you must Pay the Price. Your foe has initiative."
+			}
+		},
+		{
+			"id": "clash",
+			"name": "Clash",
+			"category": "combat",
+			"text": "When your foe has initiative and you fight with them in close quarters, roll +iron. When you exchange a volley at range, or shoot at an advancing foe, roll +edge.",
+			"stats": [
+				"iron",
+				"edge"
+			],
+			"outcomes": {
+				"strong_hit": "Inflict your harm and choose one: You bolster your position: Take +1 momentum. You find an opening: Inflict +1 harm.",
+				"weak_hit": "Inflict your harm, but then Pay the Price. Your foe has initiative.",
+				"miss": "You are outmatched and must Pay the Price. Your foe has initiative."
+			}
+		},
+		{
+			"id": "turn-tide",
+			"name": "Turn the Tide",
+			"category": "combat",
+			"text": "Once per fight, when you risk it all, you may steal initiative from your foe to make a move (not a progress move). When you do, add +1 and take +1 momentum on a hit. If you fail to score a hit on that move, you must suffer a dire outcome. Pay the Price.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "You seize the moment. Add +1 and take +1 momentum on your move.",
+				"weak_hit": "You seize the moment. Add +1 and take +1 momentum on your move.",
+				"miss": "Your bid fails. Pay the Price — the outcome should be pointed and dramatic."
+			}
+		},
+		{
+			"id": "end-fight",
+			"name": "End the Fight",
+			"category": "combat",
+			"text": "When you make a move to take decisive action, and score a strong hit, you may resolve the combat. If you do, roll the challenge dice against your progress.",
+			"isProgressMove": true,
+			"outcomes": {
+				"strong_hit": "This foe is no longer in the fight. They are killed, out of action, flee, or surrender as appropriate to the situation and your intent (Ask the Oracle if unsure).",
+				"weak_hit": "As above, but you must also choose one: It's worse than you thought: Endure Harm. You are delayed, lose advantage, or face a new danger: Suffer -2 momentum. It was a pyrrhic victory: Suffer -2 supply.",
+				"miss": "You have lost this fight. Pay the Price."
+			}
+		},
+		{
+			"id": "battle",
+			"name": "Battle",
+			"category": "combat",
+			"text": "When you fight a battle, and it happens in a blur, envision your objective and roll. If you fight at range, or using your speed and agility to your advantage: roll +edge. If you fight depending on your skill, strength, or endurance: roll +iron. If you fight using trickery or deceit: roll +shadow.",
+			"stats": [
+				"edge",
+				"iron",
+				"shadow"
+			],
+			"outcomes": {
+				"strong_hit": "You achieve your objective unconditionally. Take +2 momentum.",
+				"weak_hit": "You achieve your objective, but not without cost. Pay the Price.",
+				"miss": "You are defeated. Pay the Price."
+			}
+		},
+		{
+			"id": "endure-harm",
+			"name": "Endure Harm",
+			"category": "suffer",
+			"text": "When you face physical damage, suffer -health (1, 2, or 3) as appropriate to the situation. If your health is 0, suffer -momentum equal to any remaining harm. Then, roll +health or +iron, whichever is higher.",
+			"stats": [
+				"iron"
+			],
+			"outcomes": {
+				"strong_hit": "Choose one: Shake it off: If your health is greater than 0, suffer -1 momentum in exchange for +1 health. Embrace the pain: Take +1 momentum.",
+				"weak_hit": "You press on.",
+				"miss": "Also suffer -1 momentum. If you are at 0 health, you must mark wounded or maimed (if currently unmarked) or roll on the following table: 1-10 all is lost (dead), 11-25 unconscious/captured, 26-50 see miss outcome, 51-100 you press on."
+			}
+		},
+		{
+			"id": "face-death",
+			"name": "Face Death",
+			"category": "suffer",
+			"text": "When you are brought to the brink of death, and glimpse the world beyond, roll +heart.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "Death rejects you. You are cast back into the mortal world.",
+				"weak_hit": "Choose one: You die, but not before making a noble sacrifice (envision your final moments). Death offers you a bargain. Envision the terms (Ask the Oracle if unsure). If you accept, return to the mortal world and take +1 momentum.",
+				"miss": "You are dead."
+			}
+		},
+		{
+			"id": "companion-endure-harm",
+			"name": "Companion Endure Harm",
+			"category": "suffer",
+			"text": "When your companion faces physical damage, they suffer -health as appropriate. If their health is 0, they are taken out of action and cannot assist you until you successfully Heal them. Then, roll +heart.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "Your companion rallies. Give them +1 health.",
+				"weak_hit": "Your companion is battered. If their health is 0, they cannot assist you until they heal.",
+				"miss": "Also suffer -1 momentum. If your companion's health is 0, they are gravely wounded and out of action. Without aid, they die."
+			}
+		},
+		{
+			"id": "endure-stress",
+			"name": "Endure Stress",
+			"category": "suffer",
+			"text": "When you face mental shock or despair, suffer -spirit (1, 2, or 3) as appropriate. If your spirit is 0, suffer -momentum equal to any remaining stress. Then, roll +heart or +spirit, whichever is higher.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "Choose one: Shake it off: If spirit is greater than 0, suffer -1 momentum in exchange for +1 spirit. Embrace the darkness: Take +1 momentum.",
+				"weak_hit": "You press on.",
+				"miss": "Also suffer -1 momentum. If spirit is 0, mark shaken or corrupted (if unmarked) or roll: 1-10 lost to despair, 11-25 in a fugue state, 26-50 see miss, 51-100 press on."
+			}
+		},
+		{
+			"id": "face-desolation",
+			"name": "Face Desolation",
+			"category": "suffer",
+			"text": "When you are brought to the brink of desolation, roll +heart.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "You resist and press on.",
+				"weak_hit": "Choose one: Your spirit or sanity breaks, but not before you make a noble sacrifice. Desolation offers a bargain. Envision the terms. If you accept, you push back from the brink and take +1 momentum.",
+				"miss": "You succumb to despair or horror and are lost."
+			}
+		},
+		{
+			"id": "out-of-supply",
+			"name": "Out of Supply",
+			"category": "suffer",
+			"text": "When your supply is exhausted (reduced to 0), mark unprepared. If you suffer additional -supply while unprepared, you must exchange each -supply for any combination of -health, -spirit, or -momentum.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this is a status move, not a roll.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "face-setback",
+			"name": "Face a Setback",
+			"category": "suffer",
+			"text": "When your momentum is at its minimum (-6) and you suffer additional -momentum, choose one: Exchange each additional -momentum for any combination of -health, -spirit, or -supply.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this is a status move, not a roll.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "swear-iron-vow",
+			"name": "Swear an Iron Vow",
+			"category": "quest",
+			"text": "When you swear upon iron to complete a quest, write your vow and give the quest a rank. Then, roll +heart. If you make this vow to a person or community with whom you share a bond, add +1.",
+			"stats": [
+				"heart"
+			],
+			"outcomes": {
+				"strong_hit": "You are emboldened and it is clear what you must do next (Ask the Oracle if unsure). Take +2 momentum.",
+				"weak_hit": "You are determined but begin your quest with more questions than answers. Take +1 momentum, and envision what you do to find a path forward.",
+				"miss": "You face a significant obstacle before you can begin your quest. Envision what stands in your way (Ask the Oracle if unsure), and choose one: You press on — Suffer -2 momentum, and do what you must to overcome this obstacle. You give up — Forsake Your Vow."
+			}
+		},
+		{
+			"id": "reach-milestone",
+			"name": "Reach a Milestone",
+			"category": "quest",
+			"text": "When you make significant progress in your quest by overcoming a critical obstacle, completing a perilous expedition, solving a complex mystery, defeating a powerful threat, gaining vital support, or acquiring a crucial item, you may mark progress.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "Mark progress per your vow rank.",
+				"weak_hit": "Mark progress per your vow rank.",
+				"miss": "Mark progress per your vow rank."
+			}
+		},
+		{
+			"id": "fulfill-vow",
+			"name": "Fulfill Your Vow",
+			"category": "quest",
+			"text": "When you achieve what you believe to be the fulfillment of your vow, roll the challenge dice against your progress.",
+			"isProgressMove": true,
+			"outcomes": {
+				"strong_hit": "Your quest is complete. Mark experience: Troublesome=1, Dangerous=2, Formidable=3, Extreme=4, Epic=5.",
+				"weak_hit": "There is more to be done, or you realize the truth of your quest. Envision what you discover (Ask the Oracle if unsure). Then, mark experience (troublesome=0, dangerous=1, formidable=2, extreme=3, epic=4). You may Swear an Iron Vow to set things right. If you do, add +1.",
+				"miss": "Your quest is undone. Envision what happens (Ask the Oracle if unsure), and choose one: You recommit — Clear all but one filled progress, and raise the vow's rank by one (if not already epic). You give up — Forsake Your Vow."
+			}
+		},
+		{
+			"id": "forsake-vow",
+			"name": "Forsake Your Vow",
+			"category": "quest",
+			"text": "When you renounce your quest, betray your promise, or the goal is lost to you, clear the vow. Then, Endure Stress. You suffer -spirit equal to the rank of your vow (troublesome=1, dangerous=2, formidable=3, extreme=4, epic=5).",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this move does not require a roll.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "advance",
+			"name": "Advance",
+			"category": "quest",
+			"text": "When you focus on your skills, receive training, find inspiration, earn a reward, or gain a companion, you may spend 3 experience to add a new asset, or spend 2 experience to upgrade an existing asset.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this move does not require a roll.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "pay-the-price",
+			"name": "Pay the Price",
+			"category": "fate",
+			"text": "When you suffer the outcome of a move, choose one: Make the most obvious negative outcome happen. Envision two negative outcomes. Rate one as \"likely\" and Ask the Oracle using the yes/no table. On a \"yes\", make it happen. Otherwise, make the other outcome happen. Roll on the Pay the Price table.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this is a consequence move.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "ask-the-oracle",
+			"name": "Ask the Oracle",
+			"category": "fate",
+			"text": "When you seek to resolve questions, discover details in the world, determine how other characters respond, or trigger encounters or events, you may: Draw a conclusion (decide the answer based on the most interesting and obvious result). Ask a yes/no question (decide the odds and roll on the oracle table). Pick two (envision two options; rate one as \"likely\" and roll). Use an oracle table or generator.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this is an oracle move.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "discover-site",
+			"name": "Discover a Site",
+			"category": "delve",
+			"text": "When you resolve to enter a perilous site in pursuit of an objective, choose the site's theme and domain, and give it a rank. If you are advancing upon a known site, roll +wits.",
+			"stats": [
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You know this place. Envision the nature of the site (Ask the Oracle if unsure). Take +2 momentum.",
+				"weak_hit": "You have gathered some intelligence on this site. Envision what you know (Ask the Oracle if unsure). Take +1 momentum.",
+				"miss": "You must Delve the Depths to explore this place. You are unprepared or misinformed — Pay the Price."
+			}
+		},
+		{
+			"id": "delve-the-depths",
+			"name": "Delve the Depths",
+			"category": "delve",
+			"text": "When you traverse an area within a perilous site, envision your surroundings (Ask the Oracle if unsure). Then, consider your approach. If you navigate with haste: roll +edge. If you move carefully or quietly: roll +shadow. If you rely on your senses or study your environment: roll +wits.",
+			"stats": [
+				"edge",
+				"shadow",
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You delve deeper. Mark progress and Find an Opportunity.",
+				"weak_hit": "Roll on the Delve Feature oracle table and envision what you encounter. Mark progress.",
+				"miss": "Reveal a Danger."
+			}
+		},
+		{
+			"id": "find-opportunity",
+			"name": "Find an Opportunity",
+			"category": "delve",
+			"text": "When you encounter a helpful aspect of the site, roll on the Delve Opportunity oracle. Then, choose one: Gather information, prepare, or take action. If you act on the opportunity, take +1 on your next move within the site (one time only).",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this move has no roll. Roll on the opportunity table.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "reveal-danger",
+			"name": "Reveal a Danger",
+			"category": "delve",
+			"text": "When you encounter a threat within a perilous site, envision the danger or roll on the Delve Danger table. Choose from: Check your gear, face the danger, or retreat.",
+			"stats": [],
+			"outcomes": {
+				"strong_hit": "N/A — this move has no roll. Roll on the danger table.",
+				"weak_hit": "N/A",
+				"miss": "N/A"
+			}
+		},
+		{
+			"id": "check-your-gear",
+			"name": "Check Your Gear",
+			"category": "delve",
+			"text": "When you check to see if you have a specific item or resource, roll +supply.",
+			"stats": [
+				"supply"
+			],
+			"outcomes": {
+				"strong_hit": "You have it. Take +1 momentum.",
+				"weak_hit": "You have it, but your resources are depleted. Take +1 momentum and suffer -1 supply.",
+				"miss": "You don't have it and the situation grows more perilous. Pay the Price."
+			}
+		},
+		{
+			"id": "locate-objective",
+			"name": "Locate Your Objective",
+			"category": "delve",
+			"text": "When your exploration of a site comes to an end, roll the challenge dice against your progress.",
+			"isProgressMove": true,
+			"outcomes": {
+				"strong_hit": "You locate your objective and the situation favors you. Choose one: Make another move now (not a progress move) and add +1, or take +1 momentum.",
+				"weak_hit": "You locate your objective but face an unforeseen hazard or complication. Envision what you discover (Ask the Oracle if unsure).",
+				"miss": "Your objective falls out of reach, is lost, or you realize your true objective lies elsewhere. If you continue to explore, clear all but one filled progress and raise the site's rank by one (if not already epic)."
+			}
+		},
+		{
+			"id": "escape-the-depths",
+			"name": "Escape the Depths",
+			"category": "delve",
+			"text": "When you flee or withdraw from a site, envision your escape. Consider your approach: With haste: roll +edge. With courage or determination: roll +heart. With combat or strength: roll +iron. With stealth or trickery: roll +shadow. With knowledge or perception: roll +wits.",
+			"stats": [
+				"edge",
+				"heart",
+				"iron",
+				"shadow",
+				"wits"
+			],
+			"outcomes": {
+				"strong_hit": "You make your way safely out of the site. Take +1 momentum.",
+				"weak_hit": "You find your way out, but this place exacts its price. Choose one: You are delayed or disorientated — suffer -1 momentum. You are tired or hurt — suffer -1 health. You are dispirited — suffer -1 spirit. You sacrifice resources — suffer -1 supply.",
+				"miss": "A dire threat or obstacle stands in your way. Reveal a Danger. If you survive, you may attempt to escape again."
+			}
+		}
+	],
+	"categories": [
+		{
+			"id": "adventure",
+			"name": "Adventure",
+			"category": "adventure"
+		},
+		{
+			"id": "relationship",
+			"name": "Relationship",
+			"category": "relationship"
+		},
+		{
+			"id": "combat",
+			"name": "Combat",
+			"category": "combat"
+		},
+		{
+			"id": "suffer",
+			"name": "Suffer",
+			"category": "suffer"
+		},
+		{
+			"id": "quest",
+			"name": "Quest",
+			"category": "quest"
+		},
+		{
+			"id": "fate",
+			"name": "Fate",
+			"category": "fate"
+		},
+		{
+			"id": "delve",
+			"name": "Delve",
+			"category": "delve"
+		}
+	]
+}
