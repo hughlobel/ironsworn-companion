@@ -37,7 +37,7 @@
 		return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 	}
 
-	const displayEntries = $derived(entries.slice(0, maxEntries));
+	const displayEntries = $derived([...entries].sort((a, b) => b.timestamp - a.timestamp).slice(0, maxEntries));
 </script>
 
 <div class="journal-feed">

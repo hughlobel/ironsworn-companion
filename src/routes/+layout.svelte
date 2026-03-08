@@ -32,7 +32,12 @@
 		document.addEventListener('keydown', handleGlobalKeydown);
 
 		// Connect to MCP real-time sync stream
-		const es = new EventSource('/api/sync/stream');
+		// In dev, connect directly to MCP HTTP server (port 7474) for reliable SSE —
+		// the SvelteKit file-watcher SSE is unreliable on Windows with atomic renames.
+		const sseUrl = location.port === '5173'
+			? 'http://localhost:7474/api/sync/stream'
+			: '/api/sync/stream';
+		const es = new EventSource(sseUrl);
 		es.onmessage = (event) => {
 			try {
 				const data = JSON.parse(event.data);
